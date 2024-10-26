@@ -45,31 +45,32 @@ public class SalaDeEnsayo {
 	public List<String> obtenerOfertasComoTexto() {
 		List<String> ofertasTexto = new ArrayList<>();
         for (Oferta oferta : ofertas) {
-            String ofertaTexto = "Oferta: " + oferta.getInicio() + " - " + oferta.getFin() + ", Monto: $" + oferta.getMonto();
+            String ofertaTexto = "Oferta: " + oferta.getNombreOferente()+ " - " + oferta.getInicio() + " - " + oferta.getFin() + " - " + oferta.getEquipamiento()+ " - " +", Monto: $" + oferta.getMonto();
             ofertasTexto.add(ofertaTexto);
         }
         return ofertasTexto;
 	}
 	
-	 public void ofertasPredeterminadas() {
-	        registrarOferta(new Oferta(14, 16, 1200));
-	        registrarOferta(new Oferta(15, 18, 1800));
-	        registrarOferta(new Oferta(9, 17, 2600));
-	        registrarOferta(new Oferta(18, 20, 1200));
-	        registrarOferta(new Oferta(9, 12, 800));    
-	        registrarOferta(new Oferta(5, 10, 1600));
-	        registrarOferta(new Oferta(11, 14, 1400));
-	        registrarOferta(new Oferta(12, 15, 900));
-	        registrarOferta(new Oferta(13, 16, 1200));
-	        registrarOferta(new Oferta(14, 17, 1500));
-	        registrarOferta(new Oferta(11, 18, 1000));
-	        registrarOferta(new Oferta(16, 20, 1300));
-	        registrarOferta(new Oferta(17, 20, 1600));
-	        registrarOferta(new Oferta(13, 22, 1100));
-	        registrarOferta(new Oferta(19, 22, 1400));
-	        registrarOferta(new Oferta(22, 23, 1200));
-	        registrarOferta(new Oferta(1, 23, 20000));
-	    }
+	public void ofertasPredeterminadas() {
+	    registrarOferta(new Oferta(14, 16, 1200, "Pepe", "Sillas"));
+	    registrarOferta(new Oferta(15, 18, 1800, "Ana", "Proyector"));
+	    registrarOferta(new Oferta(9, 17, 2600, "Luis", "Pizarras"));
+	    registrarOferta(new Oferta(18, 20, 1200, "Maria", "Equipo de Sonido"));
+	    registrarOferta(new Oferta(9, 12, 800, "Carlos", "Mesas"));    
+	    registrarOferta(new Oferta(5, 10, 1600, "Laura", "Micrófonos"));
+	    registrarOferta(new Oferta(11, 14, 1400, "Jose", "Proyector"));
+	    registrarOferta(new Oferta(12, 15, 900, "Ricardo", "Luces"));
+	    registrarOferta(new Oferta(13, 16, 1200, "Sofia", "Computadoras"));
+	    registrarOferta(new Oferta(14, 17, 1500, "Javier", "Sillas"));
+	    registrarOferta(new Oferta(11, 18, 1000, "Elena", "Sonido"));
+	    registrarOferta(new Oferta(16, 20, 1300, "Miguel", "Luces"));
+	    registrarOferta(new Oferta(17, 20, 1600, "Claudia", "Mesas"));
+	    registrarOferta(new Oferta(13, 22, 1100, "Rafael", "Sonido"));
+	    registrarOferta(new Oferta(19, 22, 1400, "Patricia", "Sistema de Video"));
+	    registrarOferta(new Oferta(22, 23, 1200, "Fernando", "Proyector"));
+	    registrarOferta(new Oferta(1, 23, 20000, "Gabriel", "Sillas"));
+	}
+
 	
 	private void ordenarOfertasPorHoraFin() {
         Collections.sort(ofertas, new Comparator<Oferta>() {

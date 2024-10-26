@@ -4,6 +4,8 @@ import java.util.List;
 
 import logica.Oferta;
 import logica.SalaDeEnsayo;
+import javax.swing.JOptionPane;
+
 
 public class Controlador {
 	private SalaDeEnsayo sala;
@@ -19,20 +21,24 @@ public class Controlador {
     public void cargarOfertas(Oferta oferta) {
     	this.sala.registrarOferta(oferta);
     }
-    
+   
     public void iniciarOfertas() {
-        List<Oferta> ofertasOptimas = sala.encontrarOfertasOptimas();
-        if (!ofertasOptimas.isEmpty()) {
-            int gananciaTotal = sala.calcularGananciaTotal(ofertasOptimas);
-            System.out.println("Ofertas adjudicadas:");
-            for (Oferta oferta : ofertasOptimas) {
-                System.out.println(oferta);
-            }
-            System.out.println("Ganancia total: $" + gananciaTotal);
-        } else {
-            throw new IllegalArgumentException("No se encontraron ofertas para la sala por el momento");
-        }
-    }
+	    List<Oferta> ofertasOptimas = sala.encontrarOfertasOptimas();
+	    if (!ofertasOptimas.isEmpty()) {
+	        int gananciaTotal = sala.calcularGananciaTotal(ofertasOptimas);
+	        StringBuilder sb = new StringBuilder();
+	        sb.append("Ofertas adjudicadas:\n");
+	        for (Oferta oferta : ofertasOptimas) {
+	            sb.append(oferta).append("\n");
+	        }
+	        sb.append("Ganancia total: $").append(gananciaTotal);
+	        JOptionPane.showMessageDialog(null, sb.toString());  // Mostrar cuadro de diálogo
+	    } else {
+	        JOptionPane.showMessageDialog(null, "No se encontraron ofertas para la sala por el momento");
+	    }
+	}
+    
+    
     
     public List<String> obtenerOfertasComoTexto() {
         return sala.obtenerOfertasComoTexto();
@@ -41,4 +47,10 @@ public class Controlador {
 	public void ofertasPredeterminadas() {
 		sala.ofertasPredeterminadas();
 	}
+
+	
+
+	
+
+	
 }
