@@ -7,8 +7,8 @@ public class Oferta implements Serializable {
     private int inicio;
     private int fin;
     private double monto;
-    private String nombreOferente;  // Nuevo atributo
-    private String equipamiento;     // Nuevo atributo
+    private String nombreOferente;
+    private String equipamiento;
 
     public Oferta(int inicio, int fin, double monto, String nombreOferente, String equipamiento) {
         esHorarioValido(inicio);
@@ -20,8 +20,8 @@ public class Oferta implements Serializable {
         this.inicio = inicio;
         this.fin = fin;
         this.monto = monto;
-        this.nombreOferente = nombreOferente; // Asignación del nuevo atributo
-        this.equipamiento = equipamiento;     // Asignación del nuevo atributo
+        this.nombreOferente = nombreOferente;
+        this.equipamiento = equipamiento;
     }
 
     public int getInicio() {
@@ -37,11 +37,11 @@ public class Oferta implements Serializable {
     }
 
     public String getNombreOferente() {
-        return nombreOferente; // Getter para nombreOferente
+        return nombreOferente; 
     }
 
     public String getEquipamiento() {
-        return equipamiento; // Getter para equipamiento
+        return equipamiento; 
     }
 
     @Override
@@ -52,7 +52,7 @@ public class Oferta implements Serializable {
 
     private void esHorarioValido(int horario) {
         if (horario < 0 || horario > 24)
-            throw new IllegalArgumentException("El horario es inválido, debería encontrarse entre las 00 y 24 hs");
+            throw new IllegalArgumentException("El horario es inválido, debería encontrarse entre las 01 y 24 hs");
     }
 
     private void esInicioFinValido(int inicio, int fin) {
@@ -67,11 +67,11 @@ public class Oferta implements Serializable {
     
     private void esEquipamientoValido(String equipamiento ) {
         if (equipamiento.length() <= 0 || equipamiento.length() > 20)
-            throw new IllegalArgumentException("Porfabor ingrese un equipamiento valido");
+            throw new IllegalArgumentException("Por favor ingrese un equipamiento valido");
     }
     
     private void esNombreValido(String nombre ) {
         if (nombre.length() <= 0)
-            throw new IllegalArgumentException("Porfabor ingrese un nombre valido");
+            throw new IllegalArgumentException("Por favor ingrese un nombre valido");
     }
 }

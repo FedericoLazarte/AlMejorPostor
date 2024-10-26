@@ -15,7 +15,6 @@ import controlador.Controlador;
 import logica.Oferta;
 
 public class Main {
-
 	private JFrame frameInicio;
 	private JLabel labelTitulo;
 	private JButton boton;
@@ -27,15 +26,8 @@ public class Main {
 	private JPanel panel;
 	private JTextArea textAreaOfertas; // Área de texto para mostrar las ofertas
 	private JButton botonCargarSerializadas;
-	
-	//Nuevo:
 	private JTextField textNombreOfertante;
 	private JTextField textEquipamiento;
-
-	
-	
-	
-	
 
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
@@ -76,7 +68,6 @@ public class Main {
 		crearBotonParaIniciarOferta();
 		crearBotonParaCargarSerializados();
 		crearPanelDeOfertasActuales();
-		
 
 	}
 
@@ -104,21 +95,21 @@ public class Main {
 		textOferta.setBounds(545, 390, 108, 20);
 		frameInicio.getContentPane().add(textOferta);
 		textOferta.setColumns(10);
-		
+
 		textNombreOfertante = new JTextField();
 		textNombreOfertante.setBounds(545, 300, 108, 20);
 		frameInicio.getContentPane().add(textNombreOfertante);
 		textNombreOfertante.setColumns(10);
-		
+
 		textEquipamiento = new JTextField();
 		textEquipamiento.setBounds(421, 440, 230, 20);
 		frameInicio.getContentPane().add(textEquipamiento);
 		textEquipamiento.setColumns(10);
-			
+
 		JLabel nombreOfertante = new JLabel("Nombre:");
 		nombreOfertante.setBounds(420, 300, 108, 20);
 		frameInicio.getContentPane().add(nombreOfertante);
-		
+
 		JLabel equipamientoSolicitado = new JLabel("Equipamiento solicitado:");
 		equipamientoSolicitado.setBounds(420, 420, 148, 20);
 		frameInicio.getContentPane().add(equipamientoSolicitado);
@@ -149,7 +140,7 @@ public class Main {
 					String equipamiento = textEquipamiento.getText();
 
 					// Pasar la nueva oferta al controlador para agregarla
-					Oferta oferta = new Oferta(horaInicio, horaFin, monto,nombreOfertante,equipamiento);
+					Oferta oferta = new Oferta(horaInicio, horaFin, monto, nombreOfertante, equipamiento);
 					controlador.crearOferta(oferta);
 
 					// muestra la nueva oferta en pantalla
@@ -175,16 +166,16 @@ public class Main {
 		boton2.setBounds(148, 600, 399, 23);
 		frameInicio.getContentPane().add(boton2);
 	}
-	
+
 	private void crearBotonParaCargarSerializados() {
 		botonCargarSerializadas = new JButton("Cargar Ofertas Serializadas");
-        botonCargarSerializadas.setBounds(446, 543, 207, 23); 
-        frameInicio.getContentPane().add(botonCargarSerializadas);
-        botonCargarSerializadas.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                mostrarOfertas();
-            }
-        });
+		botonCargarSerializadas.setBounds(446, 543, 207, 23);
+		frameInicio.getContentPane().add(botonCargarSerializadas);
+		botonCargarSerializadas.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				mostrarOfertas();
+			}
+		});
 	}
 
 //este metodo se hizo largo por el scroll
@@ -210,21 +201,8 @@ public class Main {
 
 		// Agregar el panel al frame
 		frameInicio.getContentPane().add(panel);
-
-		JButton btnOfertasPredeterminadas = new JButton("Ofertas predeterminadas");
-		btnOfertasPredeterminadas.setBounds(446, 509, 207, 23);
-		frameInicio.getContentPane().add(btnOfertasPredeterminadas);
-		btnOfertasPredeterminadas.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				controlador.ofertasPredeterminadas();
-				mostrarOfertas();
-			}
-		});
 	}
 
-	
-	
-	
 	private void mostrarOfertas() {
 		List<String> ofertasTexto = controlador.obtenerOfertasComoTexto();
 		textAreaOfertas.setText(""); // Limpiar el JTextArea
