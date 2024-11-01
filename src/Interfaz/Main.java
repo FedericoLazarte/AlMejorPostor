@@ -5,6 +5,7 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.EventQueue;
 import java.awt.Font;
+import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.List;
@@ -60,7 +61,7 @@ public class Main {
 		frameInicio.setLocationRelativeTo(null);
 		frameInicio.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frameInicio.getContentPane().setLayout(null);
-
+		
 		crearTitulo();
 		crearIngreso(); // no se me ocurrio un mejor nombre para el lugar donde te deja crear una nueva
 						// ofera (son las 2 de la mañana loco jaja)
@@ -68,11 +69,25 @@ public class Main {
 		crearBotonParaIniciarOferta();
 		crearBotonParaCargarSerializados();
 		crearPanelDeOfertasActuales();
+		
+		crearImagenFondoFrame();
 
+	}
+	
+	private void crearImagenFondoFrame() {
+		ImageIcon imagen = new ImageIcon("src/imagenFondo/FondoTP3.png");
+		Image imagenEscalada = imagen.getImage().getScaledInstance(frameInicio.getWidth(), frameInicio.getHeight(), Image.SCALE_SMOOTH);
+		ImageIcon imagenRedimensionada = new ImageIcon(imagenEscalada);
+		JLabel etiquetaImagen = new JLabel(imagenRedimensionada);
+		etiquetaImagen.setBounds(0, 0, frameInicio.getWidth(), frameInicio.getHeight());
+
+		// Añadir al fondo en la primera posición (índice cero)
+		frameInicio.getContentPane().add(etiquetaImagen);
+		frameInicio.getContentPane().setComponentZOrder(etiquetaImagen, frameInicio.getContentPane().getComponentCount() - 1);
 	}
 
 	private void crearTitulo() {
-		labelTitulo = new JLabel("Al mejor postor");
+		labelTitulo = new JLabel("¡Al mejor postor!");
 		labelTitulo.setFont(new Font("Tahoma", Font.PLAIN, 42));
 		labelTitulo.setHorizontalAlignment(JLabel.CENTER);
 		labelTitulo.setOpaque(false);
@@ -82,48 +97,48 @@ public class Main {
 
 	private void crearIngreso() {
 		textHoraInicio = new JTextField();
-		textHoraInicio.setBounds(545, 328, 108, 20);
+		textHoraInicio.setBounds(550, 328, 124, 20);
 		frameInicio.getContentPane().add(textHoraInicio);
 		textHoraInicio.setColumns(10);
 
 		textHoraFinal = new JTextField();
-		textHoraFinal.setBounds(545, 359, 108, 20);
+		textHoraFinal.setBounds(550, 359, 124, 20);
 		frameInicio.getContentPane().add(textHoraFinal);
 		textHoraFinal.setColumns(10);
 
 		textOferta = new JTextField();
-		textOferta.setBounds(545, 390, 108, 20);
+		textOferta.setBounds(550, 390, 124, 20);
 		frameInicio.getContentPane().add(textOferta);
 		textOferta.setColumns(10);
 
 		textNombreOfertante = new JTextField();
-		textNombreOfertante.setBounds(545, 300, 108, 20);
+		textNombreOfertante.setBounds(550, 300, 124, 20);
 		frameInicio.getContentPane().add(textNombreOfertante);
 		textNombreOfertante.setColumns(10);
 
 		textEquipamiento = new JTextField();
-		textEquipamiento.setBounds(421, 440, 230, 20);
+		textEquipamiento.setBounds(550, 421, 124, 20);
 		frameInicio.getContentPane().add(textEquipamiento);
 		textEquipamiento.setColumns(10);
 
 		JLabel nombreOfertante = new JLabel("Nombre:");
-		nombreOfertante.setBounds(420, 300, 108, 20);
+		nombreOfertante.setBounds(412, 300, 108, 20);
 		frameInicio.getContentPane().add(nombreOfertante);
 
-		JLabel equipamientoSolicitado = new JLabel("Equipamiento solicitado:");
-		equipamientoSolicitado.setBounds(420, 420, 148, 20);
+		JLabel equipamientoSolicitado = new JLabel("Equipamiento:");
+		equipamientoSolicitado.setBounds(412, 421, 142, 20);
 		frameInicio.getContentPane().add(equipamientoSolicitado);
 
 		JLabel horaEntrada = new JLabel("Hora de entrada:");
-		horaEntrada.setBounds(420, 328, 108, 20);
+		horaEntrada.setBounds(412, 328, 108, 20);
 		frameInicio.getContentPane().add(horaEntrada);
 
 		JLabel HoraSalida = new JLabel("Hora de salida:");
-		HoraSalida.setBounds(420, 359, 102, 20);
+		HoraSalida.setBounds(412, 359, 102, 20);
 		frameInicio.getContentPane().add(HoraSalida);
 
 		JLabel Oferta = new JLabel("Oferta por el horario:");
-		Oferta.setBounds(420, 390, 119, 20);
+		Oferta.setBounds(412, 390, 119, 20);
 		frameInicio.getContentPane().add(Oferta);
 	}
 
@@ -169,7 +184,7 @@ public class Main {
 
 	private void crearBotonParaCargarSerializados() {
 		botonCargarSerializadas = new JButton("Cargar Ofertas Serializadas");
-		botonCargarSerializadas.setBounds(446, 543, 207, 23);
+		botonCargarSerializadas.setBounds(446, 525, 207, 23);
 		frameInicio.getContentPane().add(botonCargarSerializadas);
 		botonCargarSerializadas.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
