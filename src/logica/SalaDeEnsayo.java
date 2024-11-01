@@ -55,6 +55,7 @@ public class SalaDeEnsayo {
         return ofertasTexto;
     }
 
+    
     private void ordenarOfertasPorMontoYHoraFin() {
         // Ordenar por monto (descendente) y luego por hora de fin (ascendente)
         Collections.sort(ofertas, new Comparator<Oferta>() {
