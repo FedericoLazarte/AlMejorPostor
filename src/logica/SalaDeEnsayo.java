@@ -45,7 +45,7 @@ public class SalaDeEnsayo {
         return gananciaTotal;
     }
 
-    public List<String> obtenerOfertasComoTexto() {
+    public List<String> obtenerOfertasRegistradasComoTexto() {
         List<String> ofertasTexto = new ArrayList<>();
         for (Oferta oferta : ofertas) {
             String ofertaTexto = "Oferta: " + oferta.getNombreOferente() + " - " + oferta.getInicio() + " - "

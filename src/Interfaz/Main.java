@@ -12,6 +12,8 @@ import java.util.List;
 
 import javax.swing.*;
 
+import com.toedter.calendar.JDateChooser;
+
 import controlador.Controlador;
 import logica.Oferta;
 
@@ -24,12 +26,16 @@ public class Main {
 	private JTextField textHoraInicio;
 	private JTextField textHoraFinal;
 	private JTextField textOferta;
-	private JPanel panel;
-	private JTextArea textAreaOfertas; // Área de texto para mostrar las ofertas
+	private JPanel panelOfertasAdjudicadas;
+	private JPanel panelOfertasRegistradas;
+	private JTextArea textAreaRegistradas; // Área de texto para mostrar las ofertas registradas
+	private JTextArea textAreaAdjudicadas; // Área de texto para mostrar las ofertas adjudicadas
 	private JButton botonCargarSerializadas;
 	private JTextField textNombreOfertante;
 	private JTextField textEquipamiento;
 
+	private JDateChooser dateChooser;
+	
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
@@ -65,10 +71,13 @@ public class Main {
 		crearTitulo();
 		crearIngreso(); // no se me ocurrio un mejor nombre para el lugar donde te deja crear una nueva
 						// ofera (son las 2 de la mañana loco jaja)
+		
 		crearBotonParaOfertar();
 		crearBotonParaIniciarOferta();
 		crearBotonParaCargarSerializados();
-		crearPanelDeOfertasActuales();
+		crearCalendario();
+		crearPanelDeOfertasAdjudicadas();
+		crearPanelDeOfertasRegistradas();
 		
 		crearImagenFondoFrame();
 
@@ -159,7 +168,7 @@ public class Main {
 					controlador.crearOferta(oferta);
 
 					// muestra la nueva oferta en pantalla
-					mostrarOfertas();
+					mostrarOfertasRegistradas();
 
 				} catch (NumberFormatException ex) {
 					// Manejar el error si los valores ingresados no son válidos
@@ -175,7 +184,7 @@ public class Main {
 		boton2 = new JButton("Algoritmo goloso");
 		boton2.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				controlador.iniciarOfertas();
+				mostrarOfertasAdjudicadas();
 			}
 		});
 		boton2.setBounds(148, 600, 399, 23);
@@ -188,42 +197,75 @@ public class Main {
 		frameInicio.getContentPane().add(botonCargarSerializadas);
 		botonCargarSerializadas.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				mostrarOfertas();
+				mostrarOfertasRegistradas();
 			}
 		});
 	}
 
-//este metodo se hizo largo por el scroll
-	private void crearPanelDeOfertasActuales() {
-		panel = new JPanel();
-		panel.setBounds(29, 323, 373, 225);
-		panel.setLayout(new BorderLayout()); // Usar BorderLayout para el panel
-
+	private void crearCalendario() {
+		dateChooser = new JDateChooser();
+		dateChooser.setBounds(29, 290, 200, 30);
+		frameInicio.getContentPane().add(dateChooser);
+	}
+	
+	private void crearPanelDeOfertasAdjudicadas(){
+		panelOfertasAdjudicadas = new JPanel();
+		panelOfertasAdjudicadas.setBounds(29, 323, 373, 120);
+		panelOfertasAdjudicadas.setLayout(new BorderLayout());
+		
 		// Crear el JTextArea
-		textAreaOfertas = new JTextArea();
-		textAreaOfertas.setEditable(false); // No se puede editar
-		textAreaOfertas.setLineWrap(true); // Ajustar línea
-		textAreaOfertas.setWrapStyleWord(true); // Ajustar palabras
-
+		textAreaAdjudicadas = new JTextArea();
+		textAreaAdjudicadas.setEditable(false); // No se puede editar
+		textAreaAdjudicadas.setLineWrap(true); // Ajustar línea
+		textAreaAdjudicadas.setWrapStyleWord(true); // Ajustar palabras
+		
 		// Crear el JScrollPane y agregar el JTextArea
-		JScrollPane scrollPane = new JScrollPane(textAreaOfertas);
+		JScrollPane scrollPane = new JScrollPane(textAreaAdjudicadas);
 		scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS); // Siempre mostrar la barra de
 																						// desplazamiento vertical
 		scrollPane.setPreferredSize(new Dimension(373, 225)); // Tamaño preferido para el JScrollPane
 
 		// Agregar el JScrollPane al panel
-		panel.add(scrollPane, BorderLayout.CENTER);
+		panelOfertasAdjudicadas.add(scrollPane, BorderLayout.CENTER);
+		
+		frameInicio.getContentPane().add(panelOfertasAdjudicadas);
+	}
+	
+	//este metodo se hizo largo por el scroll
+	private void crearPanelDeOfertasRegistradas() {
+		panelOfertasRegistradas = new JPanel();
+		panelOfertasRegistradas.setBounds(29, 450, 373, 120);
+		panelOfertasRegistradas.setLayout(new BorderLayout()); // Usar BorderLayout para el panel
+
+		// Crear el JTextArea
+		textAreaRegistradas = new JTextArea();
+		textAreaRegistradas.setEditable(false); // No se puede editar
+		textAreaRegistradas.setLineWrap(true); // Ajustar línea
+		textAreaRegistradas.setWrapStyleWord(true); // Ajustar palabras
+
+		// Crear el JScrollPane y agregar el JTextArea
+		JScrollPane scrollPane = new JScrollPane(textAreaRegistradas);
+		scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS); // Siempre mostrar la barra de
+																						// desplazamiento vertical
+		scrollPane.setPreferredSize(new Dimension(373, 225)); // Tamaño preferido para el JScrollPane
+
+		// Agregar el JScrollPane al panel
+		panelOfertasRegistradas.add(scrollPane, BorderLayout.CENTER);
 
 		// Agregar el panel al frame
-		frameInicio.getContentPane().add(panel);
+		frameInicio.getContentPane().add(panelOfertasRegistradas);
 	}
+	
+	private void mostrarOfertasAdjudicadas() {
+		textAreaAdjudicadas.setText("--Ofertas Adjudicadas--\n"); // Limpiar el JTextArea
+		textAreaAdjudicadas.append(controlador.obtenerAdjudicadasComoTexto());
 
-	private void mostrarOfertas() {
-		List<String> ofertasTexto = controlador.obtenerOfertasComoTexto();
-		textAreaOfertas.setText(""); // Limpiar el JTextArea
-		for (String ofertaTexto : ofertasTexto) {
-			textAreaOfertas.append(ofertaTexto + "\n");
-		}
+	}
+	
+	private void mostrarOfertasRegistradas() {
+		textAreaRegistradas.setText("--Ofertas Registradas--\n"); // Limpiar el JTextArea
+		textAreaRegistradas.append(controlador.obtenerRegistradasComoTexto());
+		
 
 	}
 }

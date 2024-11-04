@@ -21,23 +21,27 @@ public class Controlador {
 		this.sala.registrarOferta(oferta);
 	}
 
-	public void iniciarOfertas() {
+	public String obtenerAdjudicadasComoTexto() { //Ya no aparece un mensajito, ahora se agrega al texto de ofertas adjudicadas
 		List<Oferta> ofertasOptimas = sala.encontrarOfertasOptimas();
 		if (!ofertasOptimas.isEmpty()) {
 			double gananciaTotal = sala.calcularGananciaTotal(ofertasOptimas);
 			StringBuilder sb = new StringBuilder();
-			sb.append("Ofertas adjudicadas:\n");
 			for (Oferta oferta : ofertasOptimas) {
 				sb.append(oferta).append("\n");
 			}
 			sb.append("Ganancia total: $").append(gananciaTotal);
-			JOptionPane.showMessageDialog(null, sb.toString()); // Mostrar cuadro de diálogo
+			return sb.toString();
 		} else {
-			JOptionPane.showMessageDialog(null, "No se encontraron ofertas para la sala por el momento");
+			return "No se encontraron ofertas para la sala por el momento";
 		}
 	}
 
-	public List<String> obtenerOfertasComoTexto() {
-		return sala.obtenerOfertasComoTexto();
+	public String obtenerRegistradasComoTexto() {
+		List<String> ofertasRegistradas = sala.obtenerOfertasRegistradasComoTexto();
+		StringBuilder sb = new StringBuilder();
+		for (String oferta : ofertasRegistradas) {
+			sb.append(oferta).append("\n");
+		}
+		return sb.toString();
 	}
 }
