@@ -43,7 +43,7 @@ class SalaDeEnsayoTest {
         salaDeEnsayo.registrarOferta(nuevaOferta);
         
         List<String> ofertasTexto = salaDeEnsayo.obtenerOfertasComoTexto();
-        //assertEquals(4, ofertasTexto.size()); // 3 del setup + 1 nueva
+        assertEquals(4, ofertasTexto.size()); // 3 del setup + 1 nueva
         assertTrue(ofertasTexto.get(3).contains("Trunks"));
         assertTrue(ofertasTexto.get(3).contains("300.0"));
     }
