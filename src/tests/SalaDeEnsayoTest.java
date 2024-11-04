@@ -31,6 +31,11 @@ class SalaDeEnsayoTest {
         salaDeEnsayo.registrarOferta(oferta2);
         salaDeEnsayo.registrarOferta(oferta3);
     }
+    
+    @Test
+    void cantidadOfertasTest() {
+    	assertEquals(3, salaDeEnsayo.getOfertas().size());
+    }
 
     @Test
     void testRegistrarOferta() {

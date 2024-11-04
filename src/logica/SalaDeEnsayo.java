@@ -7,7 +7,7 @@ import java.util.List;
 import dao.OfertaDAO;
 
 public class SalaDeEnsayo {
-    List<Oferta> ofertas;
+    private List<Oferta> ofertas;
     private OfertaDAO ofertaDAO;
 
     public SalaDeEnsayo() {
@@ -69,4 +69,8 @@ public class SalaDeEnsayo {
             }
         });
     }
+
+	public List<Oferta> getOfertas() {
+		return ofertas;
+	}
 }
