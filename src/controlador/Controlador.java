@@ -1,5 +1,6 @@
 package controlador;
 
+import java.util.Date;
 import java.util.List;
 
 import logica.Oferta;
@@ -21,8 +22,8 @@ public class Controlador {
 		this.sala.registrarOferta(oferta);
 	}
 
-	public String obtenerAdjudicadasComoTexto() { //Ya no aparece un mensajito, ahora se agrega al texto de ofertas adjudicadas
-		List<Oferta> ofertasOptimas = sala.encontrarOfertasOptimas();
+	public String obtenerAdjudicadasComoTexto(Date fechaActual) {
+		List<Oferta> ofertasOptimas = sala.encontrarOfertasOptimas(fechaActual);
 		if (!ofertasOptimas.isEmpty()) {
 			double gananciaTotal = sala.calcularGananciaTotal(ofertasOptimas);
 			StringBuilder sb = new StringBuilder();
@@ -36,12 +37,16 @@ public class Controlador {
 		}
 	}
 
-	public String obtenerRegistradasComoTexto() {
-		List<String> ofertasRegistradas = sala.obtenerOfertasRegistradasComoTexto();
+	public String obtenerRegistradasComoTexto(Date fechaActual) {
+		List<String> ofertasRegistradas = sala.obtenerOfertasRegistradasComoTexto(fechaActual);
 		StringBuilder sb = new StringBuilder();
 		for (String oferta : ofertasRegistradas) {
 			sb.append(oferta).append("\n");
 		}
 		return sb.toString();
+	}
+	
+	public void imprimirOfertas() { //¡¡ES DE PRUEBA!!
+		sala.imprimirOfertas();
 	}
 }

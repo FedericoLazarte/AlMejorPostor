@@ -1,6 +1,7 @@
 package logica;
 
 import java.io.Serializable;
+import java.util.Date;
 
 public class Oferta implements Serializable {
     private static final long serialVersionUID = 1L;
@@ -9,8 +10,9 @@ public class Oferta implements Serializable {
     private double monto;
     private String nombreOferente;
     private String equipamiento;
+    private Date fecha;
 
-    public Oferta(int inicio, int fin, double monto, String nombreOferente, String equipamiento) {
+    public Oferta(int inicio, int fin, double monto, String nombreOferente, String equipamiento, Date fecha) {
         esHorarioValido(inicio);
         esHorarioValido(fin);
         esInicioFinValido(inicio, fin);
@@ -22,6 +24,7 @@ public class Oferta implements Serializable {
         this.monto = monto;
         this.nombreOferente = nombreOferente;
         this.equipamiento = equipamiento;
+        this.fecha = fecha;
     }
 
     public int getInicio() {
@@ -44,6 +47,10 @@ public class Oferta implements Serializable {
         return equipamiento; 
     }
 
+    public Date getFecha() {
+    	return fecha;
+    }
+    
     @Override
     public String toString() {
         return "Oferta de " + inicio + " a " + fin + " hs - Monto: $" + monto +
