@@ -13,7 +13,7 @@ public class SalaDeEnsayo {
 
     public SalaDeEnsayo() {
         this.ofertaDAO = new OfertaDAO();
-//        this.ofertas = ofertaDAO.cargarOfertas(); ME FALTA LA SERIALIZACION
+        this.ofertas = ofertaDAO.cargarOfertas();
         if (ofertas == null)
             this.ofertas = new ArrayList<>();
     }

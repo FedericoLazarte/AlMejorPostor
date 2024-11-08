@@ -16,9 +16,9 @@ import com.toedter.calendar.JDateChooser;
 
 import controlador.Controlador;
 import logica.Oferta;
-import java.awt.event.InputMethodListener;
-import java.awt.event.InputMethodEvent;
 import java.beans.PropertyChangeListener;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.beans.PropertyChangeEvent;
 
 public class Main {
@@ -177,9 +177,6 @@ public class Main {
 
 					// muestra la nueva oferta en pantalla
 					mostrarOfertasRegistradas(fechaSeleccionada);
-
-					//PRUEBA (HAY QUE BORRAR)
-					controlador.imprimirOfertas();
 					
 				// Manejar los errores si los valores ingresados no son válidos	
 				} catch (NumberFormatException ex) {
@@ -202,8 +199,6 @@ public class Main {
 				mostrarOfertasAdjudicadas(fechaSeleccionada);
 			}
 		});
-		//PRUEBA (HAY QUE BORRAR)
-		controlador.imprimirOfertas();
 		
 		boton2.setBounds(148, 600, 399, 23);
 		frameInicio.getContentPane().add(boton2);
@@ -222,7 +217,7 @@ public class Main {
 
 	private void crearCalendario() {
 		calendario = new JDateChooser();
-		calendario.setDate(new Date()); //El calendario empieza con la fecha del sistema
+		prestablecerFecha("2024-11-01");
 		
 		//Se actualizan los paneles de texto acorde a la fecha
 		//cada vez que se interactua con el calendario
@@ -231,15 +226,21 @@ public class Main {
 				fechaSeleccionada = calendario.getDate();
 				mostrarOfertasAdjudicadas(fechaSeleccionada);
 				mostrarOfertasRegistradas(fechaSeleccionada);
-				
-				//PRUEBA (HAY QUE BORRAR)
-				controlador.imprimirOfertas();
 			}
 		});
 		calendario.setBounds(29, 290, 200, 30);		
 			
 		frameInicio.getContentPane().add(calendario);
 		
+	}
+
+	private void prestablecerFecha(String fecha) {
+		SimpleDateFormat formatoFecha = new SimpleDateFormat("yyyy-MM-dd");
+		try {
+			Date fechaPreestablecida = formatoFecha.parse(fecha); //Convierte la cadena en un objeto Date
+			calendario.setDate(fechaPreestablecida); //El calendario empieza con la fecha preestablecida
+		} catch(ParseException e){		
+		}
 	}
 	
 	private void crearPanelDeOfertasAdjudicadas(){
