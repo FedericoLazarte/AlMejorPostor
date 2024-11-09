@@ -1,6 +1,7 @@
 package logica;
 
 import java.io.Serializable;
+import java.util.Date;
 
 public class Oferta implements Serializable {
     private static final long serialVersionUID = 1L;
@@ -9,19 +10,22 @@ public class Oferta implements Serializable {
     private double monto;
     private String nombreOferente;
     private String equipamiento;
+    private Date fecha;
 
-    public Oferta(int inicio, int fin, double monto, String nombreOferente, String equipamiento) {
+    public Oferta(int inicio, int fin, double monto, String nombreOferente, String equipamiento, Date fecha) {
         esHorarioValido(inicio);
         esHorarioValido(fin);
         esInicioFinValido(inicio, fin);
         esMontoValido(monto);
         esEquipamientoValido(equipamiento);
         esNombreValido(nombreOferente);
+        esFechaValida(fecha);
         this.inicio = inicio;
         this.fin = fin;
         this.monto = monto;
         this.nombreOferente = nombreOferente;
         this.equipamiento = equipamiento;
+        this.fecha = fecha;
     }
 
     public int getInicio() {
@@ -44,6 +48,10 @@ public class Oferta implements Serializable {
         return equipamiento; 
     }
 
+    public Date getFecha() {
+    	return fecha;
+    }
+    
     @Override
     public String toString() {
         return "Oferta de " + inicio + " a " + fin + " hs - Monto: $" + monto +
@@ -65,13 +73,18 @@ public class Oferta implements Serializable {
             throw new IllegalArgumentException("La oferta debe ser mayor a 0");
     }
     
-    private void esEquipamientoValido(String equipamiento ) {
-        if (equipamiento.length() <= 0 || equipamiento.length() > 20)
-            throw new IllegalArgumentException("Por favor ingrese un equipamiento valido");
+    private void esEquipamientoValido(String equipamiento) {
+        if (equipamiento == null || equipamiento.length() <= 0 || equipamiento.length() > 20)
+            throw new IllegalArgumentException("Por favor ingrese un equipamiento válido");
     }
-    
+
     private void esNombreValido(String nombre ) {
         if (nombre.length() <= 0)
             throw new IllegalArgumentException("Por favor ingrese un nombre valido");
+    }
+    
+    private void esFechaValida(Date fecha) {
+        if (fecha == null)
+            throw new IllegalArgumentException("La fecha no puede ser nula.");
     }
 }

@@ -1,85 +1,134 @@
 package tests;
 
-import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.StandardCopyOption;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+
 import logica.Oferta;
 import logica.SalaDeEnsayo;
+import dao.OfertaDAO;
 
-import java.util.List;
+import static org.junit.jupiter.api.Assertions.*;
 
 class SalaDeEnsayoTest {
 
     private SalaDeEnsayo salaDeEnsayo;
-    private Oferta oferta1;
-    private Oferta oferta2;
-    private Oferta oferta3;
+    private File archivoOriginal = new File("ofertas.txt");
+    private File archivoTemporal = new File("ofertas_temp.txt");
 
     @BeforeEach
-    void setUp() {
-        salaDeEnsayo = new SalaDeEnsayo();
-        setUpOfertas();
+    void setUp() throws IOException, ParseException {
+        // Copiar el archivo original a un archivo temporal antes de cada prueba
+        if (archivoOriginal.exists()) {
+            Files.copy(archivoOriginal.toPath(), archivoTemporal.toPath(), StandardCopyOption.REPLACE_EXISTING);
+        } else {
+            archivoTemporal.createNewFile(); // Crea un archivo vacío si el original no existe
+        }
+
+        // Crear instancia de SalaDeEnsayo usando el archivo temporal para evitar modificar datos reales
+        OfertaDAO ofertaDAO = new OfertaDAO("ofertas_temp.txt");
+        salaDeEnsayo = new SalaDeEnsayo(ofertaDAO);
     }
 
-    void setUpOfertas() {
-        oferta1 = new Oferta(9, 11, 200.0, "Goku", "Proyector");
-        oferta2 = new Oferta(11, 13, 250.0, "Vegeta", "Micrófono");
-        oferta3 = new Oferta(10, 12, 150.0, "Gohan", "Altavoces");
+    @AfterEach
+    void tearDown() {
+        // Eliminar el archivo temporal después de cada prueba
+        archivoTemporal.delete();
+    }
+
+    @Test
+    void registrarOfertaTest() throws ParseException {
+        Date fechaPrueba = new SimpleDateFormat("yyyy-MM-dd").parse("2024-11-09");
+        Oferta oferta = new Oferta(9, 12, 100.0, "Goku", "Esfera", fechaPrueba);
+        salaDeEnsayo.registrarOferta(oferta);
+
+        List<String> ofertasTexto = salaDeEnsayo.obtenerOfertasRegistradasComoTexto(fechaPrueba);
+        assertEquals(1, ofertasTexto.size());
+        assertTrue(ofertasTexto.get(0).contains("Goku"));
+    }
+
+    @Test
+    void horaInvalidaTest() throws ParseException {
+        Date fechaPrueba = new SimpleDateFormat("yyyy-MM-dd").parse("2024-11-09");
+        Exception exception = assertThrows(IllegalArgumentException.class, () -> {
+            new Oferta(15, 12, 100.0, "Goku", "Esfera", fechaPrueba);  // Hora de inicio después de hora de fin
+        });
+
+        assertEquals("El horario de inicio no puede ser igual ni mayor al horario de fin", exception.getMessage());
+    }
+
+    @Test
+    void equipamientoNuloTest() throws ParseException {
+        Date fechaPrueba = new SimpleDateFormat("yyyy-MM-dd").parse("2024-11-09");
+        Exception exception = assertThrows(IllegalArgumentException.class, () -> {
+            new Oferta(9, 12, 100.0, "Goku", null, fechaPrueba);  // Equipamiento nulo
+        });
+
+        assertEquals("Por favor ingrese un equipamiento válido", exception.getMessage());
+    }
+
+    @Test
+    void montoInvalidoTest() throws ParseException {
+        Date fechaPrueba = new SimpleDateFormat("yyyy-MM-dd").parse("2024-11-09");
+        Exception exception = assertThrows(IllegalArgumentException.class, () -> {
+            new Oferta(9, 12, -100.0, "Goku", "Esfera", fechaPrueba);
+        });
+
+        assertEquals("La oferta debe ser mayor a 0", exception.getMessage());
+    }
+
+    @Test
+    void calcularGananciaTotalTest() {
+        List<Oferta> ofertasOptimas = new ArrayList<>();
+        ofertasOptimas.add(new Oferta(9, 12, 100.0, "Goku", "Esfera", new Date()));
+        ofertasOptimas.add(new Oferta(13, 15, 200.0, "Vegeta", "Nave", new Date()));
+
+        double gananciaTotal = salaDeEnsayo.calcularGananciaTotal(ofertasOptimas);
+        assertEquals(300.0, gananciaTotal, 0.01);
+    }
+
+    @Test
+    void obtenerOfertasRegistradasComoTextoTest() throws ParseException {
+        Date fechaPrueba = new SimpleDateFormat("yyyy-MM-dd").parse("2024-11-09");
+
+        Oferta oferta1 = new Oferta(9, 12, 100.0, "Goku", "Esfera", fechaPrueba);
+        Oferta oferta2 = new Oferta(14, 16, 200.0, "Vegeta", "Nave", fechaPrueba);
+
+        salaDeEnsayo.registrarOferta(oferta1);
+        salaDeEnsayo.registrarOferta(oferta2);
+
+        List<String> ofertasTexto = salaDeEnsayo.obtenerOfertasRegistradasComoTexto(fechaPrueba);
+
+        assertEquals(2, ofertasTexto.size());
+        assertTrue(ofertasTexto.get(0).contains("Goku"));
+        assertTrue(ofertasTexto.get(1).contains("Vegeta"));
+    }
+
+    @Test
+    void encontrarOfertasOptimasTest() {
+        Date fechaActual = new Date();
+        Oferta oferta1 = new Oferta(9, 12, 100.0, "Goku", "Esfera", fechaActual);
+        Oferta oferta2 = new Oferta(13, 16, 200.0, "Vegeta", "Nave", fechaActual);
+        Oferta oferta3 = new Oferta(16, 18, 150.0, "Trunks", "Espada", fechaActual);
 
         salaDeEnsayo.registrarOferta(oferta1);
         salaDeEnsayo.registrarOferta(oferta2);
         salaDeEnsayo.registrarOferta(oferta3);
-    }
-    
-    @Test
-    void cantidadOfertasTest() {
-    	assertEquals(3, salaDeEnsayo.getOfertas().size());
-    }
 
-    @Test
-    void registrarOfertaTest() {
-        Oferta nuevaOferta = new Oferta(14, 16, 300.0, "Trunks", "Iluminación");
-        salaDeEnsayo.registrarOferta(nuevaOferta);
-        
-        List<String> ofertasTexto = salaDeEnsayo.obtenerOfertasComoTexto();
-        assertEquals(4, ofertasTexto.size()); // 3 del setup + 1 nueva
-        assertTrue(ofertasTexto.get(3).contains("Trunks"));
-        assertTrue(ofertasTexto.get(3).contains("300.0"));
-    }
-
-    @Test
-    void ofertasOptimasTest() {
-        List<Oferta> ofertasOptimas = salaDeEnsayo.encontrarOfertasOptimas();
+        List<Oferta> ofertasOptimas = salaDeEnsayo.encontrarOfertasOptimas(fechaActual);
 
         assertEquals(2, ofertasOptimas.size());
-        assertTrue(ofertasOptimas.contains(oferta1));
         assertTrue(ofertasOptimas.contains(oferta2));
-    }
-
-    @Test
-    void gananciaTotalTest() {
-        List<Oferta> ofertasOptimas = salaDeEnsayo.encontrarOfertasOptimas();
-        double gananciaTotal = salaDeEnsayo.calcularGananciaTotal(ofertasOptimas);
-
-        assertEquals(450.0, gananciaTotal);
-    }
-
-    @Test
-    void ofertasComoTextoTest() {
-        List<String> ofertasTexto = salaDeEnsayo.obtenerOfertasComoTexto();
-
-        assertEquals(3, ofertasTexto.size());
-        assertEquals("Oferta: Goku - 9 - 11 - Proyector - , Monto: $200.0", ofertasTexto.get(0));
-        assertEquals("Oferta: Vegeta - 11 - 13 - Micrófono - , Monto: $250.0", ofertasTexto.get(1));
-        assertEquals("Oferta: Gohan - 10 - 12 - Altavoces - , Monto: $150.0", ofertasTexto.get(2));
-    }
-
-    @Test
-    void ordenarOfertasTest() {
-        List<Oferta> ofertasOptimas = salaDeEnsayo.encontrarOfertasOptimas();
-
-        assertEquals(oferta1, ofertasOptimas.get(0));
-        assertEquals(oferta2, ofertasOptimas.get(1));
+        assertTrue(ofertasOptimas.contains(oferta3));
     }
 }

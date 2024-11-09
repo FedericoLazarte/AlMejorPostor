@@ -3,15 +3,21 @@ package logica;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Date;
 import java.util.List;
 import dao.OfertaDAO;
 
 public class SalaDeEnsayo {
-    private List<Oferta> ofertas;
+	private List<Oferta> ofertas;
     private OfertaDAO ofertaDAO;
-
+    
     public SalaDeEnsayo() {
-        this.ofertaDAO = new OfertaDAO();
+        this(new OfertaDAO());  // Llama al constructor que recibe un OfertaDAO
+    }
+
+    // Constructor para pruebas que acepta un OfertaDAO personalizado
+    public SalaDeEnsayo(OfertaDAO ofertaDAO) {
+        this.ofertaDAO = ofertaDAO;
         this.ofertas = ofertaDAO.cargarOfertas();
         if (ofertas == null)
             this.ofertas = new ArrayList<>();
@@ -22,39 +28,40 @@ public class SalaDeEnsayo {
         ofertaDAO.guardarOfertas(ofertas);
     }
 
-    public List<Oferta> encontrarOfertasOptimas() {
+    public double calcularGananciaTotal(List<Oferta> ofertasOptimas) {
+        double gananciaTotal = 0;
+        for (Oferta oferta : ofertasOptimas)
+        		gananciaTotal += oferta.getMonto();
+        return gananciaTotal;
+    }
+
+    public List<String> obtenerOfertasRegistradasComoTexto(Date fechaActual) {
+        List<String> ofertasTexto = new ArrayList<>();
+        for (Oferta oferta : ofertas) {
+        	if (oferta.getFecha().equals(fechaActual)) { //Solo las ofertas de la fecha indicada
+        		String ofertaTexto = "Oferta: " + oferta.getNombreOferente() + " - " + oferta.getInicio() + " - "
+                        + oferta.getFin() + " - " + oferta.getEquipamiento() + " - " + ", Monto: $" + oferta.getMonto();
+                ofertasTexto.add(ofertaTexto);
+        	}  
+        }
+        return ofertasTexto;
+    }
+
+    public List<Oferta> encontrarOfertasOptimas(Date fechaActual) {
         ordenarOfertasPorMontoYHoraFin();  // Ordenar ofertas de forma óptima
 
         List<Oferta> ofertasOptimas = new ArrayList<>();
         int ultimaHoraFin = 0;
 
         for (Oferta oferta : ofertas) {
-            // Seleccionamos solo si no hay solapamiento con la última oferta seleccionada
-            if (oferta.getInicio() >= ultimaHoraFin) {
+            if (oferta.getFecha().equals(fechaActual) && //Seleccionamos las ofertas de la fecha indicada
+            		oferta.getInicio() >= ultimaHoraFin) { //y solo si no hay solapamiento con la última oferta seleccionada
                 ofertasOptimas.add(oferta);
                 ultimaHoraFin = oferta.getFin();  // Actualizamos la última hora de fin seleccionada
             }
         }
         return ofertasOptimas;
     }
-
-    public double calcularGananciaTotal(List<Oferta> ofertasOptimas) {
-        double gananciaTotal = 0;
-        for (Oferta oferta : ofertasOptimas)
-            gananciaTotal += oferta.getMonto();
-        return gananciaTotal;
-    }
-
-    public List<String> obtenerOfertasComoTexto() {
-        List<String> ofertasTexto = new ArrayList<>();
-        for (Oferta oferta : ofertas) {
-            String ofertaTexto = "Oferta: " + oferta.getNombreOferente() + " - " + oferta.getInicio() + " - "
-                    + oferta.getFin() + " - " + oferta.getEquipamiento() + " - " + ", Monto: $" + oferta.getMonto();
-            ofertasTexto.add(ofertaTexto);
-        }
-        return ofertasTexto;
-    }
-
     
     private void ordenarOfertasPorMontoYHoraFin() {
         // Ordenar por monto (descendente) y luego por hora de fin (ascendente)
@@ -70,7 +77,4 @@ public class SalaDeEnsayo {
         });
     }
 
-	public List<Oferta> getOfertas() {
-		return ofertas;
-	}
 }
