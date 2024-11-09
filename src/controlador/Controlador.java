@@ -1,5 +1,6 @@
 package controlador;
 
+import java.util.Date;
 import java.util.List;
 
 import logica.Oferta;
@@ -21,23 +22,31 @@ public class Controlador {
 		this.sala.registrarOferta(oferta);
 	}
 
-	public void iniciarOfertas() {
-		List<Oferta> ofertasOptimas = sala.encontrarOfertasOptimas();
+	public String obtenerAdjudicadasComoTexto(Date fechaActual) {
+		List<Oferta> ofertasOptimas = sala.encontrarOfertasOptimas(fechaActual);
 		if (!ofertasOptimas.isEmpty()) {
 			double gananciaTotal = sala.calcularGananciaTotal(ofertasOptimas);
 			StringBuilder sb = new StringBuilder();
-			sb.append("Ofertas adjudicadas:\n");
 			for (Oferta oferta : ofertasOptimas) {
 				sb.append(oferta).append("\n");
 			}
 			sb.append("Ganancia total: $").append(gananciaTotal);
-			JOptionPane.showMessageDialog(null, sb.toString()); // Mostrar cuadro de diálogo
+			return sb.toString();
 		} else {
-			JOptionPane.showMessageDialog(null, "No se encontraron ofertas para la sala por el momento");
+			return "No se encontraron ofertas para la sala por el momento";
 		}
 	}
 
-	public List<String> obtenerOfertasComoTexto() {
-		return sala.obtenerOfertasComoTexto();
+	public String obtenerRegistradasComoTexto(Date fechaActual) {
+		List<String> ofertasRegistradas = sala.obtenerOfertasRegistradasComoTexto(fechaActual);
+		StringBuilder sb = new StringBuilder();
+		for (String oferta : ofertasRegistradas) {
+			sb.append(oferta).append("\n");
+		}
+		return sb.toString();
+	}
+	
+	public void imprimirOfertas() { //¡¡ES DE PRUEBA!!
+		sala.imprimirOfertas();
 	}
 }
