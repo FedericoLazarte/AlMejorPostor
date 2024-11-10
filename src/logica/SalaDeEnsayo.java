@@ -76,5 +76,39 @@ public class SalaDeEnsayo {
             }
         });
     }
+    
+    public List<Oferta> encontrarOfertasOptimasGrafo(Date fechaActual) {
+        // Filtramos las ofertas de la fecha actual
+        List<Oferta> ofertasFecha = ofertas.stream()
+                .filter(o -> o.getFecha().equals(fechaActual))
+                .sorted(Comparator.comparingInt(Oferta::getInicio))
+                .toList();
+
+        // Construimos el grafo
+        Grafo grafo = construirGrafo(ofertasFecha);
+        
+        // Encontramos el camino de máxima ganancia
+        return grafo.encontrarCaminoMaximo();
+    }
+
+    private Grafo construirGrafo(List<Oferta> ofertas) {
+    	Grafo grafo = new Grafo();
+        
+        // Agregamos todas las ofertas como vértices
+        for (Oferta oferta : ofertas) {
+            grafo.agregarVertice(oferta);
+        }
+
+        // Conectamos ofertas compatibles
+        for (int i = 0; i < ofertas.size(); i++) {
+            for (int j = i + 1; j < ofertas.size(); j++) {
+                Oferta actual = ofertas.get(i);
+                Oferta siguiente = ofertas.get(j);
+                grafo.agregarArista(actual, siguiente);
+            }
+        }
+
+        return grafo;
+    }
 
 }

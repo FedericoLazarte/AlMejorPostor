@@ -81,6 +81,7 @@ public class Main {
 		crearBotonParaCargarSerializados();
 		crearPanelDeOfertasAdjudicadas();
 		crearPanelDeOfertasRegistradas();
+		crearBotonGrafo();
 		
 		crearCalendario();
 		
@@ -98,6 +99,7 @@ public class Main {
 		// Añadir al fondo en la primera posición (índice cero)
 		frameInicio.getContentPane().add(etiquetaImagen);
 		frameInicio.getContentPane().setComponentZOrder(etiquetaImagen, frameInicio.getContentPane().getComponentCount() - 1);
+		
 	}
 
 	private void crearTitulo() {
@@ -194,121 +196,155 @@ public class Main {
 	        }
 	    });
 
-		boton.setBounds(446, 474, 207, 23);
-		frameInicio.getContentPane().add(boton);
+	    boton.setBounds(446, 474, 207, 23);
+	    frameInicio.getContentPane().add(boton);
 	}
 
-	private void crearBotonParaIniciarOferta() {
-		boton2 = new JButton("Obtener ofertas adjudicadas");
-		boton2.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				// Obtener valor de la fecha actual
-				fechaSeleccionada = calendario.getDate();
-				mostrarOfertasAdjudicadas(fechaSeleccionada);
-			}
-		});
-		
-		boton2.setBounds(148, 600, 399, 23);
-		frameInicio.getContentPane().add(boton2);
-	}
-
-	private void crearBotonParaCargarSerializados() {
-		botonCargarSerializadas = new JButton("Cargar Ofertas Serializadas");
-		botonCargarSerializadas.setBounds(446, 525, 207, 23);
-		frameInicio.getContentPane().add(botonCargarSerializadas);
-		botonCargarSerializadas.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				mostrarOfertasRegistradas(fechaSeleccionada);
-			}
-		});
-	}
 
 	private void crearCalendario() {
-		calendario = new JDateChooser();
-		prestablecerFecha("2024-11-01");
-		
-		//Se actualizan los paneles de texto acorde a la fecha
-		//cada vez que se interactua con el calendario
-		calendario.addPropertyChangeListener(new PropertyChangeListener() {
-			public void propertyChange(PropertyChangeEvent evt) {
-				fechaSeleccionada = calendario.getDate();
-				mostrarOfertasAdjudicadas(fechaSeleccionada);
-				mostrarOfertasRegistradas(fechaSeleccionada);
-			}
-		});
-		calendario.setBounds(29, 290, 200, 30);		
-			
-		frameInicio.getContentPane().add(calendario);
-		
+	    calendario = new JDateChooser();
+	    prestablecerFecha("2024-11-01");
+	    
+	    // Se actualizan los paneles de texto acorde a la fecha
+	    // cada vez que se interactua con el calendario
+	    calendario.addPropertyChangeListener(new PropertyChangeListener() {
+	        public void propertyChange(PropertyChangeEvent evt) {
+	            fechaSeleccionada = calendario.getDate();
+	            mostrarOfertasAdjudicadas(fechaSeleccionada);
+	            mostrarOfertasRegistradas(fechaSeleccionada);
+	        }
+	    });
+	    calendario.setBounds(29, 290, 200, 30);        
+	    
+	    frameInicio.getContentPane().add(calendario);
 	}
 
 	private void prestablecerFecha(String fecha) {
-		SimpleDateFormat formatoFecha = new SimpleDateFormat("yyyy-MM-dd");
-		try {
-			Date fechaPreestablecida = formatoFecha.parse(fecha); //Convierte la cadena en un objeto Date
-			calendario.setDate(fechaPreestablecida); //El calendario empieza con la fecha preestablecida
-		} catch(ParseException e){		
-		}
+	    SimpleDateFormat formatoFecha = new SimpleDateFormat("yyyy-MM-dd");
+	    try {
+	        Date fechaPreestablecida = formatoFecha.parse(fecha); // Convierte la cadena en un objeto Date
+	        calendario.setDate(fechaPreestablecida); // El calendario empieza con la fecha preestablecida
+	    } catch (ParseException e) {        
+	    }
 	}
-	
-	private void crearPanelDeOfertasAdjudicadas(){
-		panelOfertasAdjudicadas = new JPanel();
-		panelOfertasAdjudicadas.setBounds(29, 323, 373, 120);
-		panelOfertasAdjudicadas.setLayout(new BorderLayout());
-		
-		// Crear el JTextArea
-		textAreaAdjudicadas = new JTextArea();
-		textAreaAdjudicadas.setEditable(false); // No se puede editar
-		textAreaAdjudicadas.setLineWrap(true); // Ajustar línea
-		textAreaAdjudicadas.setWrapStyleWord(true); // Ajustar palabras
-		
-		// Crear el JScrollPane y agregar el JTextArea
-		JScrollPane scrollPane = new JScrollPane(textAreaAdjudicadas);
-		scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS); // Siempre mostrar la barra de
-																						// desplazamiento vertical
-		scrollPane.setPreferredSize(new Dimension(373, 225)); // Tamaño preferido para el JScrollPane
 
-		// Agregar el JScrollPane al panel
-		panelOfertasAdjudicadas.add(scrollPane, BorderLayout.CENTER);
-		
-		frameInicio.getContentPane().add(panelOfertasAdjudicadas);
-	}
-	
-	//este metodo se hizo largo por el scroll
-	private void crearPanelDeOfertasRegistradas() {
-		panelOfertasRegistradas = new JPanel();
-		panelOfertasRegistradas.setBounds(29, 450, 373, 120);
-		panelOfertasRegistradas.setLayout(new BorderLayout()); // Usar BorderLayout para el panel
+	private void crearPanelDeOfertasAdjudicadas() {
+	    panelOfertasAdjudicadas = new JPanel();
+	    panelOfertasAdjudicadas.setBounds(29, 323, 373, 120);
+	    panelOfertasAdjudicadas.setLayout(new BorderLayout());
+	    
+	    // Crear el JTextArea
+	    textAreaAdjudicadas = new JTextArea();
+	    textAreaAdjudicadas.setEditable(false); // No se puede editar
+	    textAreaAdjudicadas.setLineWrap(true); // Ajustar línea
+	    textAreaAdjudicadas.setWrapStyleWord(true); // Ajustar palabras
+	    
+	    // Crear el JScrollPane y agregar el JTextArea
+	    JScrollPane scrollPane = new JScrollPane(textAreaAdjudicadas);
+	    scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS); // Siempre mostrar la barra de desplazamiento vertical
+	    scrollPane.setPreferredSize(new Dimension(373, 225)); // Tamaño preferido para el JScrollPane
 
-		// Crear el JTextArea
-		textAreaRegistradas = new JTextArea();
-		textAreaRegistradas.setEditable(false); // No se puede editar
-		textAreaRegistradas.setLineWrap(true); // Ajustar línea
-		textAreaRegistradas.setWrapStyleWord(true); // Ajustar palabras
+	    // Agregar el// Crear el JScrollPane al panel
+	    panelOfertasAdjudicadas.add(scrollPane, BorderLayout.CENTER);
 
-		// Crear el JScrollPane y agregar el JTextArea
-		JScrollPane scrollPane = new JScrollPane(textAreaRegistradas);
-		scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS); // Siempre mostrar la barra de
-																						// desplazamiento vertical
-		scrollPane.setPreferredSize(new Dimension(373, 225)); // Tamaño preferido para el JScrollPane
+	    frameInicio.getContentPane().add(panelOfertasAdjudicadas);
+	    }
 
-		// Agregar el JScrollPane al panel
-		panelOfertasRegistradas.add(scrollPane, BorderLayout.CENTER);
+	    // Este método se hizo largo por el scroll
+	    private void crearPanelDeOfertasRegistradas() {
+	        panelOfertasRegistradas = new JPanel();
+	        panelOfertasRegistradas.setBounds(29, 450, 373, 120);
+	        panelOfertasRegistradas.setLayout(new BorderLayout()); // Usar BorderLayout para el panel
 
-		// Agregar el panel al frame
-		frameInicio.getContentPane().add(panelOfertasRegistradas);
-	}
-	
-	private void mostrarOfertasAdjudicadas(Date fechaDeOfertas) {
-		textAreaAdjudicadas.setText("--Ofertas Adjudicadas--\n"); // Limpiar el JTextArea
-		textAreaAdjudicadas.append(controlador.obtenerAdjudicadasComoTexto(fechaDeOfertas));
+	        // Crear el JTextArea
+	        textAreaRegistradas = new JTextArea();
+	        textAreaRegistradas.setEditable(false); // No se puede editar
+	        textAreaRegistradas.setLineWrap(true); // Ajustar línea
+	        textAreaRegistradas.setWrapStyleWord(true); // Ajustar palabras
 
-	}
-	
-	private void mostrarOfertasRegistradas(Date fechaDeOfertas) {
-		textAreaRegistradas.setText("--Ofertas Registradas--\n"); // Limpiar el JTextArea
-		textAreaRegistradas.append(controlador.obtenerRegistradasComoTexto(fechaDeOfertas));
-		
+	        // Crear el JScrollPane y agregar el JTextArea
+	        JScrollPane scrollPane = new JScrollPane(textAreaRegistradas);
+	        scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS); // Siempre mostrar la barra de desplazamiento vertical
+	        scrollPane.setPreferredSize(new Dimension(373, 225)); // Tamaño preferido para el JScrollPane
 
-	}
+	        // Agregar el JScrollPane al panel
+	        panelOfertasRegistradas.add(scrollPane, BorderLayout.CENTER);
+
+	        // Agregar el panel al frame
+	        frameInicio.getContentPane().add(panelOfertasRegistradas);
+	    }
+
+	    private void mostrarOfertasAdjudicadas(Date fechaDeOfertas) {
+	        textAreaAdjudicadas.setText("--Ofertas Adjudicadas--\n"); // Limpiar el JTextArea
+	        textAreaAdjudicadas.append(controlador.obtenerAdjudicadasGreedyComoTexto(fechaDeOfertas));
+	    }
+
+	    private void mostrarOfertasAdjudicadasGrafo(Date fechaDeOfertas) {
+	        textAreaAdjudicadas.setText("--Ofertas Adjudicadas (DAG)--\n"); // Limpiar el JTextArea
+	        textAreaAdjudicadas.append(controlador.obtenerAdjudicadasGrafoComoTexto(fechaDeOfertas));
+	    }
+
+	    private void mostrarOfertasRegistradas(Date fechaDeOfertas) {
+	        textAreaRegistradas.setText("--Ofertas Registradas--\n"); // Limpiar el JTextArea
+	        textAreaRegistradas.append(controlador.obtenerRegistradasComoTexto(fechaDeOfertas));
+	    }
+
+	    private void crearBotonParaCargarSerializados() {
+	        botonCargarSerializadas = new JButton("Cargar Ofertas Serializadas");
+	        botonCargarSerializadas.setBounds(446, 525, 207, 23);
+	        frameInicio.getContentPane().add(botonCargarSerializadas);
+	        botonCargarSerializadas.addActionListener(new ActionListener() {
+	            public void actionPerformed(ActionEvent e) {
+	                fechaSeleccionada = calendario.getDate();
+	                if (fechaSeleccionada == null) {
+	                    JOptionPane.showMessageDialog(frameInicio, 
+	                        "Por favor, seleccione una fecha válida.", 
+	                        "Error de Fecha", 
+	                        JOptionPane.ERROR_MESSAGE);
+	                    return;
+	                }
+	                mostrarOfertasRegistradas(fechaSeleccionada);
+	            }
+	        });
+	    }
+
+	    private void crearBotonParaIniciarOferta() {
+	        boton2 = new JButton("Obtener ofertas adjudicadas (Greedy)");
+	        boton2.addActionListener(new ActionListener() {
+	            public void actionPerformed(ActionEvent e) {
+	                fechaSeleccionada = calendario.getDate();
+	                if (fechaSeleccionada == null) {
+	                    JOptionPane.showMessageDialog(frameInicio, 
+	                        "Por favor, seleccione una fecha válida.", 
+	                        "Error de Fecha", 
+	                        JOptionPane.ERROR_MESSAGE);
+	                    return;
+	                }
+	                mostrarOfertasAdjudicadas(fechaSeleccionada);
+	            }
+	        });
+	        
+	        boton2.setBounds(148, 600, 399, 23);
+	        frameInicio.getContentPane().add(boton2);
+	    }
+
+	    private void crearBotonGrafo() {
+	        JButton botonGrafo = new JButton("Resolver con DAG (Óptimo)");
+	        botonGrafo.setBounds(148, 627, 399, 23); 
+	        frameInicio.getContentPane().add(botonGrafo);
+	        
+	        botonGrafo.addActionListener(new ActionListener() {
+	            public void actionPerformed(ActionEvent e) {
+	                fechaSeleccionada = calendario.getDate();
+	                if (fechaSeleccionada == null) {
+	                    JOptionPane.showMessageDialog(frameInicio, 
+	                        "Por favor, seleccione una fecha válida.", 
+	                        "Error de Fecha", 
+	                        JOptionPane.ERROR_MESSAGE);
+	                    return;
+	                }
+	                mostrarOfertasAdjudicadasGrafo(fechaSeleccionada);
+	            }
+	        });
+	    }
 }

@@ -1,5 +1,4 @@
 package controlador;
-
 import java.util.Date;
 import java.util.List;
 import logica.Oferta;
@@ -26,15 +25,36 @@ public class Controlador {
         this.sala.registrarOferta(oferta);
     }
 
-    public String obtenerAdjudicadasComoTexto(Date fechaActual) {
+    public String obtenerAdjudicadasGreedyComoTexto(Date fechaActual) {
         List<Oferta> ofertasOptimas = sala.encontrarOfertasOptimas(fechaActual);
+
         if (!ofertasOptimas.isEmpty()) {
             double gananciaTotal = sala.calcularGananciaTotal(ofertasOptimas);
             StringBuilder sb = new StringBuilder();
+            sb.append("Algoritmo utilizado: Greedy (heurístico)\n\n");
+            
             for (Oferta oferta : ofertasOptimas) {
                 sb.append(oferta).append("\n");
             }
-            sb.append("Ganancia total: $").append(gananciaTotal);
+            sb.append("\nGanancia total: $").append(gananciaTotal);
+            return sb.toString();
+        } else {
+            return "No se encontraron ofertas para la sala por el momento";
+        }
+    }
+
+    public String obtenerAdjudicadasGrafoComoTexto(Date fechaActual) {
+        List<Oferta> ofertasOptimas = sala.encontrarOfertasOptimasGrafo(fechaActual);
+
+        if (!ofertasOptimas.isEmpty()) {
+            double gananciaTotal = sala.calcularGananciaTotal(ofertasOptimas);
+            StringBuilder sb = new StringBuilder();
+            sb.append("Algoritmo utilizado: Grafo (óptimo)\n\n");
+            
+            for (Oferta oferta : ofertasOptimas) {
+                sb.append(oferta).append("\n");
+            }
+            sb.append("\nGanancia total: $").append(gananciaTotal);
             return sb.toString();
         } else {
             return "No se encontraron ofertas para la sala por el momento";
@@ -50,4 +70,18 @@ public class Controlador {
         return sb.toString();
     }
     
+    // Método para comparar resultados de ambos algoritmos
+    public String compararAlgoritmos(Date fechaActual) {
+        String resultadoGreedy = obtenerAdjudicadasGreedyComoTexto(fechaActual);
+        String resultadoGrafo = obtenerAdjudicadasGrafoComoTexto(fechaActual);
+        
+        StringBuilder comparacion = new StringBuilder();
+        comparacion.append("=== Comparación de Algoritmos ===\n\n");
+        comparacion.append("--- Algoritmo Greedy ---\n");
+        comparacion.append(resultadoGreedy);
+        comparacion.append("\n\n--- Algoritmo Grafo ---\n");
+        comparacion.append(resultadoGrafo);
+        
+        return comparacion.toString();
+    }
 }
