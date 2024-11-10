@@ -54,7 +54,7 @@ public class Main {
 	}
 
 	public Main() {
-		controlador = new Controlador(); // Inicializar el controlador
+		controlador = new Controlador(); 
 		initialize();
 	}
 
@@ -70,20 +70,15 @@ public class Main {
 		frameInicio.getContentPane().setBackground(Color.WHITE);
 		frameInicio.setLocationRelativeTo(null);
 		frameInicio.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		frameInicio.getContentPane().setLayout(null);
-		
+		frameInicio.getContentPane().setLayout(null);		
 		crearTitulo();
-		crearIngreso(); // no se me ocurrio un mejor nombre para el lugar donde te deja crear una nueva
-						// ofera (son las 2 de la mañana loco jaja)
-		
+		crearIngreso(); 		
 		crearBotonParaOfertar();
 		crearBotonParaIniciarOferta();
 		crearBotonParaCargarSerializados();
 		crearPanelDeOfertasAdjudicadas();
-		crearPanelDeOfertasRegistradas();
-		
-		crearCalendario();
-		
+		crearPanelDeOfertasRegistradas();	
+		crearCalendario();	
 		crearImagenFondoFrame();
 
 	}
@@ -94,8 +89,6 @@ public class Main {
 		ImageIcon imagenRedimensionada = new ImageIcon(imagenEscalada);
 		JLabel etiquetaImagen = new JLabel(imagenRedimensionada);
 		etiquetaImagen.setBounds(0, 0, frameInicio.getWidth(), frameInicio.getHeight());
-
-		// Añadir al fondo en la primera posición (índice cero)
 		frameInicio.getContentPane().add(etiquetaImagen);
 		frameInicio.getContentPane().setComponentZOrder(etiquetaImagen, frameInicio.getContentPane().getComponentCount() - 1);
 	}
@@ -157,35 +150,32 @@ public class Main {
 	}
 
 	private void crearBotonParaOfertar() {
-		boton = new JButton("Cargar Oferta");
-		boton.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				try {
-					// Obtener los valores de los campos de texto
-					String nombreOfertante = textNombreOfertante.getText();
-					int horaInicio = Integer.parseInt(textHoraInicio.getText());
-					int horaFin = Integer.parseInt(textHoraFinal.getText());
-					int monto = Integer.parseInt(textOferta.getText());
-					String equipamiento = textEquipamiento.getText();
-					
-					// Obtener valor de la fecha actual
-					fechaSeleccionada = calendario.getDate();
-					
-					// Pasar la nueva oferta al controlador para agregarla
-					Oferta oferta = new Oferta(horaInicio, horaFin, monto, nombreOfertante, equipamiento, fechaSeleccionada);
-					controlador.crearOferta(oferta);
-
-					// muestra la nueva oferta en pantalla
-					mostrarOfertasRegistradas(fechaSeleccionada);
-					
-				// Manejar los errores si los valores ingresados no son válidos	
-				} catch (NumberFormatException ex) {
-					JOptionPane.showMessageDialog(null, "Asegúrese de ingresar números válidos.", "Error", JOptionPane.ERROR_MESSAGE);
-				} catch (NullPointerException ex) {
-					JOptionPane.showMessageDialog(null, "Ingrese una fecha válida.", "Error", JOptionPane.ERROR_MESSAGE);
-				}
-			}
-		});
+	    boton = new JButton("Cargar Oferta");
+	    boton.addActionListener(new ActionListener() {
+	        public void actionPerformed(ActionEvent e) {
+	            try {
+	                String nombreOfertante = textNombreOfertante.getText();
+	                int horaInicio = Integer.parseInt(textHoraInicio.getText());
+	                int horaFin = Integer.parseInt(textHoraFinal.getText());
+	                int monto = Integer.parseInt(textOferta.getText());
+	                String equipamiento = textEquipamiento.getText();
+	                fechaSeleccionada = calendario.getDate();
+	                if (fechaSeleccionada == null) {
+	                    JOptionPane.showMessageDialog(null, "Por favor, seleccione una fecha válida.", "Error de Fecha", JOptionPane.ERROR_MESSAGE);
+	                    return; 
+	                }
+	                Oferta oferta = new Oferta(horaInicio, horaFin, monto, nombreOfertante, equipamiento, fechaSeleccionada);
+	                controlador.crearOferta(oferta);
+	                mostrarOfertasRegistradas(fechaSeleccionada);                
+	            } catch (NumberFormatException ex) {
+	                JOptionPane.showMessageDialog(null, "Asegúrese de ingresar números válidos.", "Error", JOptionPane.ERROR_MESSAGE);
+	            } catch (IllegalArgumentException ex) { 
+	                JOptionPane.showMessageDialog(null, ex.getMessage(), "Error de Horario", JOptionPane.ERROR_MESSAGE);
+	            } catch (NullPointerException ex) {
+	                JOptionPane.showMessageDialog(null, "Ingrese una fecha válida.", "Error", JOptionPane.ERROR_MESSAGE);
+	            }
+	        }
+	    });
 		boton.setBounds(446, 474, 207, 23);
 		frameInicio.getContentPane().add(boton);
 	}
@@ -199,7 +189,7 @@ public class Main {
 				mostrarOfertasAdjudicadas(fechaSeleccionada);
 			}
 		});
-		
+
 		boton2.setBounds(148, 600, 399, 23);
 		frameInicio.getContentPane().add(boton2);
 	}
@@ -218,9 +208,6 @@ public class Main {
 	private void crearCalendario() {
 		calendario = new JDateChooser();
 		prestablecerFecha("2024-11-01");
-		
-		//Se actualizan los paneles de texto acorde a la fecha
-		//cada vez que se interactua con el calendario
 		calendario.addPropertyChangeListener(new PropertyChangeListener() {
 			public void propertyChange(PropertyChangeEvent evt) {
 				fechaSeleccionada = calendario.getDate();
@@ -228,17 +215,15 @@ public class Main {
 				mostrarOfertasRegistradas(fechaSeleccionada);
 			}
 		});
-		calendario.setBounds(29, 290, 200, 30);		
-			
-		frameInicio.getContentPane().add(calendario);
-		
+		calendario.setBounds(29, 290, 200, 30);					
+		frameInicio.getContentPane().add(calendario);	
 	}
 
 	private void prestablecerFecha(String fecha) {
 		SimpleDateFormat formatoFecha = new SimpleDateFormat("yyyy-MM-dd");
 		try {
-			Date fechaPreestablecida = formatoFecha.parse(fecha); //Convierte la cadena en un objeto Date
-			calendario.setDate(fechaPreestablecida); //El calendario empieza con la fecha preestablecida
+			Date fechaPreestablecida = formatoFecha.parse(fecha);
+			calendario.setDate(fechaPreestablecida); 
 		} catch(ParseException e){		
 		}
 	}
@@ -247,60 +232,39 @@ public class Main {
 		panelOfertasAdjudicadas = new JPanel();
 		panelOfertasAdjudicadas.setBounds(29, 323, 373, 120);
 		panelOfertasAdjudicadas.setLayout(new BorderLayout());
-		
-		// Crear el JTextArea
 		textAreaAdjudicadas = new JTextArea();
-		textAreaAdjudicadas.setEditable(false); // No se puede editar
-		textAreaAdjudicadas.setLineWrap(true); // Ajustar línea
-		textAreaAdjudicadas.setWrapStyleWord(true); // Ajustar palabras
-		
-		// Crear el JScrollPane y agregar el JTextArea
+		textAreaAdjudicadas.setEditable(false); 
+		textAreaAdjudicadas.setLineWrap(true); 
+		textAreaAdjudicadas.setWrapStyleWord(true); 
 		JScrollPane scrollPane = new JScrollPane(textAreaAdjudicadas);
-		scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS); // Siempre mostrar la barra de
-																						// desplazamiento vertical
-		scrollPane.setPreferredSize(new Dimension(373, 225)); // Tamaño preferido para el JScrollPane
-
-		// Agregar el JScrollPane al panel
-		panelOfertasAdjudicadas.add(scrollPane, BorderLayout.CENTER);
-		
+		scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS); 																		
+		scrollPane.setPreferredSize(new Dimension(373, 225)); 
+		panelOfertasAdjudicadas.add(scrollPane, BorderLayout.CENTER);	
 		frameInicio.getContentPane().add(panelOfertasAdjudicadas);
 	}
 	
-	//este metodo se hizo largo por el scroll
 	private void crearPanelDeOfertasRegistradas() {
 		panelOfertasRegistradas = new JPanel();
 		panelOfertasRegistradas.setBounds(29, 450, 373, 120);
-		panelOfertasRegistradas.setLayout(new BorderLayout()); // Usar BorderLayout para el panel
-
-		// Crear el JTextArea
+		panelOfertasRegistradas.setLayout(new BorderLayout());
 		textAreaRegistradas = new JTextArea();
-		textAreaRegistradas.setEditable(false); // No se puede editar
-		textAreaRegistradas.setLineWrap(true); // Ajustar línea
-		textAreaRegistradas.setWrapStyleWord(true); // Ajustar palabras
-
-		// Crear el JScrollPane y agregar el JTextArea
+		textAreaRegistradas.setEditable(false); 
+		textAreaRegistradas.setLineWrap(true); 
+		textAreaRegistradas.setWrapStyleWord(true);
 		JScrollPane scrollPane = new JScrollPane(textAreaRegistradas);
-		scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS); // Siempre mostrar la barra de
-																						// desplazamiento vertical
-		scrollPane.setPreferredSize(new Dimension(373, 225)); // Tamaño preferido para el JScrollPane
-
-		// Agregar el JScrollPane al panel
+		scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS); 																		
+		scrollPane.setPreferredSize(new Dimension(373, 225)); 
 		panelOfertasRegistradas.add(scrollPane, BorderLayout.CENTER);
-
-		// Agregar el panel al frame
 		frameInicio.getContentPane().add(panelOfertasRegistradas);
 	}
 	
 	private void mostrarOfertasAdjudicadas(Date fechaDeOfertas) {
-		textAreaAdjudicadas.setText("--Ofertas Adjudicadas--\n"); // Limpiar el JTextArea
+		textAreaAdjudicadas.setText("--Ofertas Adjudicadas--\n");
 		textAreaAdjudicadas.append(controlador.obtenerAdjudicadasComoTexto(fechaDeOfertas));
-
 	}
 	
 	private void mostrarOfertasRegistradas(Date fechaDeOfertas) {
-		textAreaRegistradas.setText("--Ofertas Registradas--\n"); // Limpiar el JTextArea
+		textAreaRegistradas.setText("--Ofertas Registradas--\n"); 
 		textAreaRegistradas.append(controlador.obtenerRegistradasComoTexto(fechaDeOfertas));
-		
-
 	}
 }

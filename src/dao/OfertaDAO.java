@@ -11,19 +11,29 @@ import java.util.List;
 import logica.Oferta;
 
 public class OfertaDAO {
-	private static final String ARCHIVO_OFERTAS = "ofertas.txt";
-	
-	public void guardarOfertas(List<Oferta> ofertas) {
-		try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(ARCHIVO_OFERTAS))) {
+    private String archivoOfertas;
+
+    // Constructor por defecto que usa "ofertas.txt"
+    public OfertaDAO() {
+        this.archivoOfertas = "ofertas.txt";
+    }
+
+    // Constructor que permite especificar un archivo diferente
+    public OfertaDAO(String archivoOfertas) {
+        this.archivoOfertas = archivoOfertas;
+    }
+
+    public void guardarOfertas(List<Oferta> ofertas) {
+        try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(archivoOfertas))) {
             oos.writeObject(ofertas);
         } catch (IOException e) {
             e.printStackTrace();
         }
-	}
-	
-	@SuppressWarnings("unchecked")
-	public List<Oferta> cargarOfertas() {
-        try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(ARCHIVO_OFERTAS))) {
+    }
+
+    @SuppressWarnings("unchecked")
+    public List<Oferta> cargarOfertas() {
+        try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(archivoOfertas))) {
             return (List<Oferta>) ois.readObject();
         } catch (FileNotFoundException e) {
             System.out.println("Archivo de ofertas no encontrado, iniciando con lista vacía.");

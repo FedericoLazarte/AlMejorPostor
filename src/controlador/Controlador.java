@@ -5,14 +5,20 @@ import java.util.List;
 
 import logica.Oferta;
 import logica.SalaDeEnsayo;
-import javax.swing.JOptionPane;
+
 
 public class Controlador {
 	private SalaDeEnsayo sala;
 
-	public Controlador() {
-		this.sala = new SalaDeEnsayo();
-	}
+	 // Constructor que recibe una instancia de SalaDeEnsayo, para los tests
+    public Controlador(SalaDeEnsayo sala) {
+        this.sala = sala;
+    }
+
+    // Constructor original
+    public Controlador() {
+        this(new SalaDeEnsayo());
+    }
 
 	public void crearOferta(Oferta oferta) {
 		cargarOfertas(oferta);
