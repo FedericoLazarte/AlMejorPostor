@@ -12,7 +12,12 @@ public class SalaDeEnsayo {
     private OfertaDAO ofertaDAO;
 
     public SalaDeEnsayo() {
-        this.ofertaDAO = new OfertaDAO();
+        this(new OfertaDAO());  // Llama al constructor que recibe un OfertaDAO
+    }
+
+    // Constructor para pruebas que acepta un OfertaDAO personalizado
+    public SalaDeEnsayo(OfertaDAO ofertaDAO) {
+        this.ofertaDAO = ofertaDAO;
         this.ofertas = ofertaDAO.cargarOfertas();
         if (ofertas == null)
             this.ofertas = new ArrayList<>();
