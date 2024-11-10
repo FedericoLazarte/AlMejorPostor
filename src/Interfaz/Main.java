@@ -157,41 +157,42 @@ public class Main {
 	}
 
 	private void crearBotonParaOfertar() {
-		boton = new JButton("Cargar Oferta");
-		boton.addActionListener(new ActionListener() {
-		    public void actionPerformed(ActionEvent e) {
-		        try {
-		            // Obtener los valores de los campos de texto
-		            String nombreOfertante = textNombreOfertante.getText();
-		            int horaInicio = Integer.parseInt(textHoraInicio.getText());
-		            int horaFin = Integer.parseInt(textHoraFinal.getText());
-		            int monto = Integer.parseInt(textOferta.getText());
-		            String equipamiento = textEquipamiento.getText();
-		            
-		            // Obtener valor de la fecha seleccionada
-		            fechaSeleccionada = calendario.getDate();
-		            
-		            // Validar si la fecha es válida
-		            if (fechaSeleccionada == null) {
-		                JOptionPane.showMessageDialog(null, "Por favor, seleccione una fecha válida.", "Error de Fecha", JOptionPane.ERROR_MESSAGE);
-		                return; // Salir del método si la fecha es nula
-		            }
-		            
-		            // Crear la nueva oferta
-		            Oferta oferta = new Oferta(horaInicio, horaFin, monto, nombreOfertante, equipamiento, fechaSeleccionada);
-		            controlador.crearOferta(oferta);
+	    boton = new JButton("Cargar Oferta");
+	    boton.addActionListener(new ActionListener() {
+	        public void actionPerformed(ActionEvent e) {
+	            try {
+	                // Obtener los valores de los campos de texto
+	                String nombreOfertante = textNombreOfertante.getText();
+	                int horaInicio = Integer.parseInt(textHoraInicio.getText());
+	                int horaFin = Integer.parseInt(textHoraFinal.getText());
+	                int monto = Integer.parseInt(textOferta.getText());
+	                String equipamiento = textEquipamiento.getText();
+	                
+	                // Obtener valor de la fecha seleccionada
+	                fechaSeleccionada = calendario.getDate();
+	                
+	                // Validar si la fecha es válida
+	                if (fechaSeleccionada == null) {
+	                    JOptionPane.showMessageDialog(null, "Por favor, seleccione una fecha válida.", "Error de Fecha", JOptionPane.ERROR_MESSAGE);
+	                    return; // Salir del método si la fecha es nula
+	                }
+	                
+	                // Crear la nueva oferta
+	                Oferta oferta = new Oferta(horaInicio, horaFin, monto, nombreOfertante, equipamiento, fechaSeleccionada);
+	                controlador.crearOferta(oferta);
 
-		            // Mostrar la nueva oferta registrada
-		            mostrarOfertasRegistradas(fechaSeleccionada);
-		            
-		        // Manejar los errores si los valores ingresados no son válidos
-		        } catch (NumberFormatException ex) {
-		            JOptionPane.showMessageDialog(null, "Asegúrese de ingresar números válidos.", "Error", JOptionPane.ERROR_MESSAGE);
-		        } catch (NullPointerException ex) {
-		            JOptionPane.showMessageDialog(null, "Ingrese una fecha válida.", "Error", JOptionPane.ERROR_MESSAGE);
-		        }
-		    }
-		});
+	                // Mostrar la nueva oferta registrada
+	                mostrarOfertasRegistradas(fechaSeleccionada);
+	                
+	            } catch (NumberFormatException ex) {
+	                JOptionPane.showMessageDialog(null, "Asegúrese de ingresar números válidos.", "Error", JOptionPane.ERROR_MESSAGE);
+	            } catch (IllegalArgumentException ex) { // Captura la excepción de horario no válido
+	                JOptionPane.showMessageDialog(null, ex.getMessage(), "Error de Horario", JOptionPane.ERROR_MESSAGE);
+	            } catch (NullPointerException ex) {
+	                JOptionPane.showMessageDialog(null, "Ingrese una fecha válida.", "Error", JOptionPane.ERROR_MESSAGE);
+	            }
+	        }
+	    });
 
 		boton.setBounds(446, 474, 207, 23);
 		frameInicio.getContentPane().add(boton);
