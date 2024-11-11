@@ -1,6 +1,6 @@
 package logica;
 
-class Arista {
+public class Arista {
     private Oferta origen;
     private Oferta destino;
     private double peso;  // El peso será la ganancia de la oferta origen
