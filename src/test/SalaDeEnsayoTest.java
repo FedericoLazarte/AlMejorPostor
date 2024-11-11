@@ -37,7 +37,8 @@ class SalaDeEnsayoTest {
 
         // Crear instancia de SalaDeEnsayo usando el archivo temporal para evitar modificar datos reales
         OfertaDAO ofertaDAO = new OfertaDAO("ofertas_temp.txt");
-        salaDeEnsayo = new SalaDeEnsayo(ofertaDAO);
+        salaDeEnsayo = new SalaDeEnsayo();
+        salaDeEnsayo.cargarOfertasSerializadas(ofertaDAO);
     }
 
     @AfterEach
@@ -52,7 +53,7 @@ class SalaDeEnsayoTest {
         Oferta oferta = new Oferta(9, 12, 100.0, "Goku", "Esfera", fechaPrueba);
         salaDeEnsayo.registrarOferta(oferta);
 
-        List<String> ofertasTexto = salaDeEnsayo.obtenerOfertasRegistradasComoTexto(fechaPrueba);
+        List<String> ofertasTexto = salaDeEnsayo.obtenerOfertasDeFechaComoTexto(fechaPrueba);
         assertEquals(1, ofertasTexto.size());
         assertTrue(ofertasTexto.get(0).contains("Goku"));
     }
@@ -107,7 +108,7 @@ class SalaDeEnsayoTest {
         salaDeEnsayo.registrarOferta(oferta1);
         salaDeEnsayo.registrarOferta(oferta2);
 
-        List<String> ofertasTexto = salaDeEnsayo.obtenerOfertasRegistradasComoTexto(fechaPrueba);
+        List<String> ofertasTexto = salaDeEnsayo.obtenerOfertasDeFechaComoTexto(fechaPrueba);
 
         assertEquals(2, ofertasTexto.size());
         assertTrue(ofertasTexto.get(0).contains("Goku"));

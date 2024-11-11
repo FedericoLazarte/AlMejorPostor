@@ -166,7 +166,8 @@ public class Main {
 	                }
 	                Oferta oferta = new Oferta(horaInicio, horaFin, monto, nombreOfertante, equipamiento, fechaSeleccionada);
 	                controlador.crearOferta(oferta);
-	                mostrarOfertasRegistradas(fechaSeleccionada);                
+	                mostrarOfertasRegistradas();  
+	                mostrarOfertasDeFecha(fechaSeleccionada);;
 	            } catch (NumberFormatException ex) {
 	                JOptionPane.showMessageDialog(null, "Asegúrese de ingresar números válidos.", "Error", JOptionPane.ERROR_MESSAGE);
 	            } catch (IllegalArgumentException ex) { 
@@ -186,7 +187,7 @@ public class Main {
 			public void actionPerformed(ActionEvent e) {
 				// Obtener valor de la fecha actual
 				fechaSeleccionada = calendario.getDate();
-				mostrarOfertasAdjudicadas(fechaSeleccionada);
+				controlador.obtenerAdjudicadasComoTexto(fechaSeleccionada);
 			}
 		});
 
@@ -200,29 +201,33 @@ public class Main {
 		frameInicio.getContentPane().add(botonCargarSerializadas);
 		botonCargarSerializadas.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				mostrarOfertasRegistradas(fechaSeleccionada);
+				cargarOfertasSerializadas();
+				mostrarOfertasRegistradas();
 			}
 		});
 	}
 
+	private void cargarOfertasSerializadas() {
+		this.controlador.cargarOfertasSerializadas();
+	}
+	
 	private void crearCalendario() {
 		calendario = new JDateChooser();
 		prestablecerFecha("2024-11-01");
 		calendario.addPropertyChangeListener(new PropertyChangeListener() {
 			public void propertyChange(PropertyChangeEvent evt) {
 				fechaSeleccionada = calendario.getDate();
-				mostrarOfertasAdjudicadas(fechaSeleccionada);
-				mostrarOfertasRegistradas(fechaSeleccionada);
+				mostrarOfertasDeFecha(fechaSeleccionada);
 			}
 		});
-		calendario.setBounds(29, 290, 200, 30);					
+		calendario.setBounds(29, 421, 200, 30);					
 		frameInicio.getContentPane().add(calendario);	
 	}
 
 	private void prestablecerFecha(String fecha) {
 		SimpleDateFormat formatoFecha = new SimpleDateFormat("yyyy-MM-dd");
 		try {
-			Date fechaPreestablecida = formatoFecha.parse(fecha);
+			Date fechaPreestablecida = formatoFecha.parse(fecha); //Formatea la fecha lejible a una tipo Date
 			calendario.setDate(fechaPreestablecida); 
 		} catch(ParseException e){		
 		}
@@ -230,7 +235,7 @@ public class Main {
 	
 	private void crearPanelDeOfertasAdjudicadas(){
 		panelOfertasAdjudicadas = new JPanel();
-		panelOfertasAdjudicadas.setBounds(29, 323, 373, 120);
+		panelOfertasAdjudicadas.setBounds(29, 290, 373, 120);
 		panelOfertasAdjudicadas.setLayout(new BorderLayout());
 		textAreaAdjudicadas = new JTextArea();
 		textAreaAdjudicadas.setEditable(false); 
@@ -258,13 +263,13 @@ public class Main {
 		frameInicio.getContentPane().add(panelOfertasRegistradas);
 	}
 	
-	private void mostrarOfertasAdjudicadas(Date fechaDeOfertas) {
-		textAreaAdjudicadas.setText("--Ofertas Adjudicadas--\n");
-		textAreaAdjudicadas.append(controlador.obtenerAdjudicadasComoTexto(fechaDeOfertas));
+	private void mostrarOfertasRegistradas() {
+		textAreaAdjudicadas.setText("--Ofertas Registradas--\n");
+		textAreaAdjudicadas.append(controlador.obtenerOfertasRegistradas());
 	}
 	
-	private void mostrarOfertasRegistradas(Date fechaDeOfertas) {
-		textAreaRegistradas.setText("--Ofertas Registradas--\n"); 
-		textAreaRegistradas.append(controlador.obtenerRegistradasComoTexto(fechaDeOfertas));
+	private void mostrarOfertasDeFecha(Date fechaDeOfertas) {
+		textAreaRegistradas.setText("--Ofertas de la fecha--\n"); 
+		textAreaRegistradas.append(controlador.obtenerOfertasDeFecha(fechaDeOfertas));
 	}
 }

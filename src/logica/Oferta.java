@@ -1,6 +1,7 @@
 package logica;
 
 import java.io.Serializable;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class Oferta implements Serializable {
@@ -49,6 +50,11 @@ public class Oferta implements Serializable {
 
     public Date getFecha() {
     	return fecha;
+    }
+
+    public String getFechaTexto() {
+    	SimpleDateFormat formato = new SimpleDateFormat("dd-MM-yyyy");
+        return formato.format(fecha);
     }
     
     @Override
