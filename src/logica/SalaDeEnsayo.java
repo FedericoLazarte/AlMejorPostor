@@ -82,7 +82,7 @@ public class SalaDeEnsayo {
     }
 
 	public List<Oferta> getOfertas() {
-		return ofertas;
+		return new ArrayList<>(ofertas);
 	}
 
 }
