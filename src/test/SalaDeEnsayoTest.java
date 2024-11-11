@@ -6,8 +6,6 @@ import org.junit.jupiter.api.Test;
 
 import java.io.File;
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.StandardCopyOption;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -23,28 +21,28 @@ import static org.junit.jupiter.api.Assertions.*;
 class SalaDeEnsayoTest {
 
     private SalaDeEnsayo salaDeEnsayo;
-    private File archivoOriginal = new File("ofertas.txt");
-    private File archivoTemporal = new File("ofertas_temp.txt");
+    private static final String TEST_FILE = "ofertas_test.txt";
+    private File archivoTest;
+    private OfertaDAO ofertaDAO;
 
     @BeforeEach
     void setUp() throws IOException, ParseException {
-        // Copiar el archivo original a un archivo temporal antes de cada prueba
-        if (archivoOriginal.exists()) {
-            Files.copy(archivoOriginal.toPath(), archivoTemporal.toPath(), StandardCopyOption.REPLACE_EXISTING);
-        } else {
-            archivoTemporal.createNewFile(); // Crea un archivo vacío si el original no existe
+        archivoTest = new File(TEST_FILE);
+        if (archivoTest.exists()) {
+            archivoTest.delete();
         }
+        archivoTest.createNewFile();
 
-        // Crear instancia de SalaDeEnsayo usando el archivo temporal para evitar modificar datos reales
-        OfertaDAO ofertaDAO = new OfertaDAO("ofertas_temp.txt");
+        ofertaDAO = new OfertaDAO(TEST_FILE);
         salaDeEnsayo = new SalaDeEnsayo();
         salaDeEnsayo.cargarOfertasSerializadas(ofertaDAO);
     }
 
     @AfterEach
     void tearDown() {
-        // Eliminar el archivo temporal después de cada prueba
-        archivoTemporal.delete();
+        if (archivoTest != null && archivoTest.exists()) {
+            archivoTest.delete();
+        }
     }
 
     @Test
@@ -108,7 +106,7 @@ class SalaDeEnsayoTest {
         salaDeEnsayo.registrarOferta(oferta1);
         salaDeEnsayo.registrarOferta(oferta2);
 
-        List<String> ofertasTexto = salaDeEnsayo.obtenerOfertasDeFechaComoTexto(fechaPrueba);
+        List<String> ofertasTexto = salaDeEnsayo.obtenerOfertasRegistradasComoTexto();
 
         assertEquals(2, ofertasTexto.size());
         assertTrue(ofertasTexto.get(0).contains("Goku"));
