@@ -20,6 +20,7 @@ public class Oferta implements Serializable {
         esMontoValido(monto);
         esEquipamientoValido(equipamiento);
         esNombreValido(nombreOferente);
+        fechaValida(fecha);
         this.inicio = inicio;
         this.fin = fin;
         this.monto = monto;
@@ -79,6 +80,8 @@ public class Oferta implements Serializable {
     }
     
     private void esEquipamientoValido(String equipamiento ) {
+    	if (equipamiento == null)
+    		throw new NullPointerException("El valor de equipamiento no puede ser null");
         if (equipamiento.length() <= 0 || equipamiento.length() > 20)
             throw new IllegalArgumentException("Por favor ingrese un equipamiento valido");
     }
@@ -86,5 +89,10 @@ public class Oferta implements Serializable {
     private void esNombreValido(String nombre ) {
         if (nombre.length() <= 0)
             throw new IllegalArgumentException("Por favor ingrese un nombre valido");
+    }
+    
+    private void fechaValida(Date fecha) {
+    	if(fecha == null)
+    		throw new NullPointerException("La fecha no puede ser null.");
     }
 }

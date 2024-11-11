@@ -26,14 +26,14 @@ public class Main {
 	private JLabel labelTitulo;
 	private JButton boton;
 	private JButton boton2;
-	private Controlador controlador; // Crear instancia del controlador
+	private Controlador controlador; 
 	private JTextField textHoraInicio;
 	private JTextField textHoraFinal;
 	private JTextField textOferta;
 	private JPanel panelOfertasAdjudicadas;
 	private JPanel panelOfertasRegistradas;
-	private JTextArea textAreaRegistradas; // Área de texto para mostrar las ofertas registradas
-	private JTextArea textAreaAdjudicadas; // Área de texto para mostrar las ofertas adjudicadas
+	private JTextArea textAreaRegistradas; 
+	private JTextArea textAreaAdjudicadas;
 	private JButton botonCargarSerializadas;
 	private JTextField textNombreOfertante;
 	private JTextField textEquipamiento;
@@ -83,16 +83,6 @@ public class Main {
 
 	}
 	
-	private void crearImagenFondoFrame() {
-		ImageIcon imagen = new ImageIcon("src/imagenFondo/FondoTP3.png");
-		Image imagenEscalada = imagen.getImage().getScaledInstance(frameInicio.getWidth(), frameInicio.getHeight(), Image.SCALE_SMOOTH);
-		ImageIcon imagenRedimensionada = new ImageIcon(imagenEscalada);
-		JLabel etiquetaImagen = new JLabel(imagenRedimensionada);
-		etiquetaImagen.setBounds(0, 0, frameInicio.getWidth(), frameInicio.getHeight());
-		frameInicio.getContentPane().add(etiquetaImagen);
-		frameInicio.getContentPane().setComponentZOrder(etiquetaImagen, frameInicio.getContentPane().getComponentCount() - 1);
-	}
-
 	private void crearTitulo() {
 		labelTitulo = new JLabel("¡Al mejor postor!");
 		labelTitulo.setFont(new Font("Tahoma", Font.PLAIN, 42));
@@ -180,21 +170,7 @@ public class Main {
 		boton.setBounds(446, 474, 207, 23);
 		frameInicio.getContentPane().add(boton);
 	}
-
-	private void crearBotonParaIniciarOferta() {
-		boton2 = new JButton("Obtener ofertas adjudicadas");
-		boton2.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				// Obtener valor de la fecha actual
-				fechaSeleccionada = calendario.getDate();
-				controlador.obtenerAdjudicadasComoTexto(fechaSeleccionada);
-			}
-		});
-
-		boton2.setBounds(148, 600, 399, 23);
-		frameInicio.getContentPane().add(boton2);
-	}
-
+	
 	private void crearBotonParaCargarSerializados() {
 		botonCargarSerializadas = new JButton("Cargar Ofertas Serializadas");
 		botonCargarSerializadas.setBounds(446, 525, 207, 23);
@@ -206,31 +182,32 @@ public class Main {
 			}
 		});
 	}
-
+	
+	private void mostrarOfertasRegistradas() {
+		textAreaAdjudicadas.setText("--Ofertas Registradas--\n");
+		textAreaAdjudicadas.append(controlador.obtenerOfertasRegistradas());
+	}
+	
+	private void mostrarOfertasDeFecha(Date fechaDeOfertas) {
+		textAreaRegistradas.setText("--Ofertas de la fecha--\n"); 
+		textAreaRegistradas.append(controlador.obtenerOfertasDeFecha(fechaDeOfertas));
+	}
+	
 	private void cargarOfertasSerializadas() {
 		this.controlador.cargarOfertasSerializadas();
 	}
-	
-	private void crearCalendario() {
-		calendario = new JDateChooser();
-		prestablecerFecha("2024-11-01");
-		calendario.addPropertyChangeListener(new PropertyChangeListener() {
-			public void propertyChange(PropertyChangeEvent evt) {
+
+	private void crearBotonParaIniciarOferta() {
+		boton2 = new JButton("Obtener ofertas adjudicadas");
+		boton2.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
 				fechaSeleccionada = calendario.getDate();
-				mostrarOfertasDeFecha(fechaSeleccionada);
+				controlador.obtenerAdjudicadasComoTexto(fechaSeleccionada);
 			}
 		});
-		calendario.setBounds(29, 421, 200, 30);					
-		frameInicio.getContentPane().add(calendario);	
-	}
 
-	private void prestablecerFecha(String fecha) {
-		SimpleDateFormat formatoFecha = new SimpleDateFormat("yyyy-MM-dd");
-		try {
-			Date fechaPreestablecida = formatoFecha.parse(fecha); //Formatea la fecha lejible a una tipo Date
-			calendario.setDate(fechaPreestablecida); 
-		} catch(ParseException e){		
-		}
+		boton2.setBounds(148, 600, 399, 23);
+		frameInicio.getContentPane().add(boton2);
 	}
 	
 	private void crearPanelDeOfertasAdjudicadas(){
@@ -263,13 +240,35 @@ public class Main {
 		frameInicio.getContentPane().add(panelOfertasRegistradas);
 	}
 	
-	private void mostrarOfertasRegistradas() {
-		textAreaAdjudicadas.setText("--Ofertas Registradas--\n");
-		textAreaAdjudicadas.append(controlador.obtenerOfertasRegistradas());
+	private void crearCalendario() {
+		calendario = new JDateChooser();
+		prestablecerFecha("2024-11-01");
+		calendario.addPropertyChangeListener(new PropertyChangeListener() {
+			public void propertyChange(PropertyChangeEvent evt) {
+				fechaSeleccionada = calendario.getDate();
+				mostrarOfertasDeFecha(fechaSeleccionada);
+			}
+		});
+		calendario.setBounds(29, 421, 200, 30);					
+		frameInicio.getContentPane().add(calendario);	
 	}
 	
-	private void mostrarOfertasDeFecha(Date fechaDeOfertas) {
-		textAreaRegistradas.setText("--Ofertas de la fecha--\n"); 
-		textAreaRegistradas.append(controlador.obtenerOfertasDeFecha(fechaDeOfertas));
+	private void crearImagenFondoFrame() {
+		ImageIcon imagen = new ImageIcon("src/imagenFondo/FondoTP3.png");
+		Image imagenEscalada = imagen.getImage().getScaledInstance(frameInicio.getWidth(), frameInicio.getHeight(), Image.SCALE_SMOOTH);
+		ImageIcon imagenRedimensionada = new ImageIcon(imagenEscalada);
+		JLabel etiquetaImagen = new JLabel(imagenRedimensionada);
+		etiquetaImagen.setBounds(0, 0, frameInicio.getWidth(), frameInicio.getHeight());
+		frameInicio.getContentPane().add(etiquetaImagen);
+		frameInicio.getContentPane().setComponentZOrder(etiquetaImagen, frameInicio.getContentPane().getComponentCount() - 1);
 	}
+
+	private void prestablecerFecha(String fecha) {
+		SimpleDateFormat formatoFecha = new SimpleDateFormat("yyyy-MM-dd");
+		try {
+			Date fechaPreestablecida = formatoFecha.parse(fecha); //Formatea la fecha lejible a una tipo Date
+			calendario.setDate(fechaPreestablecida); 
+		} catch(ParseException e){		
+		}
+	}	
 }
