@@ -18,7 +18,6 @@ public class Controlador {
         this.sala = sala;
     }
 
-    // Constructor original
     public Controlador() {
         this(new SalaDeEnsayo());
     }
@@ -36,19 +35,20 @@ public class Controlador {
 	}
 	
 	public void obtenerAdjudicadasComoTexto(Date fechaActual) {
-		List<Oferta> ofertasOptimas = sala.encontrarOfertasOptimas(fechaActual);
-		if (!ofertasOptimas.isEmpty()) {
-			double gananciaTotal = sala.calcularGananciaTotal(ofertasOptimas);
-			StringBuilder sb = new StringBuilder();
-			for (Oferta oferta : ofertasOptimas) {
-				sb.append(oferta).append("\n");
-			}
-			sb.append("Ganancia total: $").append(gananciaTotal);
-			JOptionPane.showMessageDialog(null, sb.toString());
-		} else {
-			JOptionPane.showMessageDialog(null, "No se encontraron ofertas para la fecha seleccionada.", "Error", JOptionPane.ERROR_MESSAGE);
-		}
+	    List<Oferta> ofertasOptimas = sala.encontrarOfertasOptimas();
+	    if (!ofertasOptimas.isEmpty()) {
+	        double gananciaTotal = sala.calcularGananciaTotal(ofertasOptimas);
+	        StringBuilder sb = new StringBuilder();
+	        for (Oferta oferta : ofertasOptimas) {
+	            sb.append(oferta).append("\n");
+	        }
+	        sb.append("Ganancia total: $").append(gananciaTotal);
+	        JOptionPane.showMessageDialog(null, sb.toString());
+	    } else {
+	        JOptionPane.showMessageDialog(null, "No se encontraron ofertas para la fecha seleccionada.", "Error", JOptionPane.ERROR_MESSAGE);
+	    }
 	}
+
 
 	public String obtenerOfertasDeFecha(Date fechaActual) {
 		List<String> ofertasRegistradas = sala.obtenerOfertasDeFechaComoTexto(fechaActual);

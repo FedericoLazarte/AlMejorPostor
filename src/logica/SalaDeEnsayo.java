@@ -11,7 +11,7 @@ public class SalaDeEnsayo {
 	private List<Oferta> ofertas;
     private OfertaDAO ofertaDAO;
 
-    public SalaDeEnsayo() { //La sala empieza vacía
+    public SalaDeEnsayo() { 
     	this.ofertas = new ArrayList<>();
     }
 
@@ -25,18 +25,18 @@ public class SalaDeEnsayo {
         if (ofertaDAO != null)
         	ofertaDAO.guardarOfertas(ofertas);
     }
-
+    
     public double calcularGananciaTotal(List<Oferta> ofertasOptimas) {
         double gananciaTotal = 0;
         for (Oferta oferta : ofertasOptimas)
-        		gananciaTotal += oferta.getMonto();
+            gananciaTotal += oferta.getMonto();
         return gananciaTotal;
     }
 
     public List<String> obtenerOfertasDeFechaComoTexto(Date fechaActual) {
         List<String> ofertasTexto = new ArrayList<>();
         for (Oferta oferta : ofertas) {
-        	if (oferta.getFecha().equals(fechaActual)) { //Solo las ofertas de la fecha indicada
+        	if (oferta.getFecha().equals(fechaActual)) {
         		String ofertaTexto = "Oferta: " + oferta.getNombreOferente() + " - " + oferta.getInicio() + " - "
                         + oferta.getFin() + " - " + oferta.getEquipamiento() + " - " + ", Monto: $" + oferta.getMonto();
                 ofertasTexto.add(ofertaTexto);
@@ -55,32 +55,28 @@ public class SalaDeEnsayo {
     	return ofertasTexto;
     }
     
-    public List<Oferta> encontrarOfertasOptimas(Date fechaActual) {
-        ordenarOfertasPorMontoYHoraFin();  // Ordenar ofertas de forma óptima
-
-        List<Oferta> ofertasOptimas = new ArrayList<>();
-        int ultimaHoraFin = 0;
-
+    public List<Oferta> encontrarOfertasOptimas() {
+        ordenarOfertasPorMontoYFin(); 
+        List<Oferta> ofertasSeleccionadas = new ArrayList<>();
+        int ultimaHoraFin = -1;  
         for (Oferta oferta : ofertas) {
-            if (oferta.getFecha().equals(fechaActual) && //Seleccionamos las ofertas de la fecha indicada
-            		oferta.getInicio() >= ultimaHoraFin) { //y solo si no hay solapamiento con la última oferta seleccionada
-                ofertasOptimas.add(oferta);
-                ultimaHoraFin = oferta.getFin();  // Actualizamos la última hora de fin seleccionada
+            if (oferta.getInicio() >= ultimaHoraFin) {
+                ofertasSeleccionadas.add(oferta);
+                ultimaHoraFin = oferta.getFin(); 
             }
         }
-        return ofertasOptimas;
+        return ofertasSeleccionadas;
     }
     
-    private void ordenarOfertasPorMontoYHoraFin() {
-        // Ordenar por monto (descendente) y luego por hora de fin (ascendente)
+    private void ordenarOfertasPorMontoYFin() {
         Collections.sort(ofertas, new Comparator<Oferta>() {
             @Override
             public int compare(Oferta o1, Oferta o2) {
-                if (Double.compare(o2.getMonto(), o1.getMonto()) != 0) {
-                    return Double.compare(o2.getMonto(), o1.getMonto()); // Primero monto descendente
-                } else {
-                    return Integer.compare(o1.getFin(), o2.getFin());    // Luego fin ascendente
+                int montoCompare = Double.compare(o2.getMonto(), o1.getMonto());
+                if (montoCompare != 0) {
+                    return montoCompare;
                 }
+                return Integer.compare(o1.getFin(), o2.getFin());
             }
         });
     }

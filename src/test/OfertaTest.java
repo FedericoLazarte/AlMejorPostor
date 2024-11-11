@@ -28,10 +28,10 @@ class OfertaTest {
 
 	    @Test
 	    void equipamientoNuloTest() {
-	        Exception exception = assertThrows(IllegalArgumentException.class, () -> {
+	        Exception exception = assertThrows(NullPointerException.class, () -> {
 	            new Oferta(9, 12, 100.0, "Goku", null, new Date());  // Equipamiento nulo
 	        });
-	        assertEquals("Por favor ingrese un equipamiento válido", exception.getMessage());
+	        assertEquals("El valor de equipamiento no puede ser null", exception.getMessage());
 	    }
 
 	    @Test
@@ -44,10 +44,10 @@ class OfertaTest {
 
 	    @Test
 	    void fechaNulaTest() {
-	        Exception exception = assertThrows(IllegalArgumentException.class, () -> {
+	        Exception exception = assertThrows(NullPointerException.class, () -> {
 	            new Oferta(9, 12, 100.0, "Goku", "Esfera", null);  // Fecha nula
 	        });
-	        assertEquals("La fecha no puede ser nula.", exception.getMessage());
+	        assertEquals("La fecha no puede ser null.", exception.getMessage());
 	    }
 
 	    @Test

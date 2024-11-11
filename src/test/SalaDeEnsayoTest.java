@@ -71,11 +71,11 @@ class SalaDeEnsayoTest {
     @Test
     void equipamientoNuloTest() throws ParseException {
         Date fechaPrueba = new SimpleDateFormat("yyyy-MM-dd").parse("2024-11-09");
-        Exception exception = assertThrows(IllegalArgumentException.class, () -> {
+        Exception exception = assertThrows(NullPointerException.class, () -> {
             new Oferta(9, 12, 100.0, "Goku", null, fechaPrueba);  // Equipamiento nulo
         });
 
-        assertEquals("Por favor ingrese un equipamiento válido", exception.getMessage());
+        assertEquals("El valor de equipamiento no puede ser null", exception.getMessage());
     }
 
     @Test
@@ -126,7 +126,7 @@ class SalaDeEnsayoTest {
         salaDeEnsayo.registrarOferta(oferta2);
         salaDeEnsayo.registrarOferta(oferta3);
 
-        List<Oferta> ofertasOptimas = salaDeEnsayo.encontrarOfertasOptimas(fechaActual);
+        List<Oferta> ofertasOptimas = salaDeEnsayo.encontrarOfertasOptimas();
 
         assertEquals(2, ofertasOptimas.size());
         assertTrue(ofertasOptimas.contains(oferta2));
