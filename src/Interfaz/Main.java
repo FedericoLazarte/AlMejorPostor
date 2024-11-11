@@ -9,6 +9,7 @@ import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Date;
+import java.util.List;
 
 import javax.swing.*;
 
@@ -76,6 +77,7 @@ public class Main {
 		crearBotonParaOfertar();
 		crearBotonParaIniciarOferta();
 		crearBotonParaCargarSerializados();
+		crearBotonOfertasOptimas();
 		crearPanelDeOfertasAdjudicadas();
 		crearPanelDeOfertasRegistradas();	
 		crearCalendario();	
@@ -206,7 +208,7 @@ public class Main {
 			}
 		});
 
-		boton2.setBounds(148, 600, 399, 23);
+		boton2.setBounds(148, 591, 399, 23);
 		frameInicio.getContentPane().add(boton2);
 	}
 	
@@ -271,4 +273,34 @@ public class Main {
 		} catch(ParseException e){		
 		}
 	}	
+	
+	private void crearBotonOfertasOptimas() {
+	    JButton btnObtenerOfertasOptimas = new JButton("Obtener ofertas óptimas (DAG)");
+	    btnObtenerOfertasOptimas.setBounds(148, 627, 399, 23);
+	    frameInicio.getContentPane().add(btnObtenerOfertasOptimas);
+	    btnObtenerOfertasOptimas.addActionListener(new ActionListener() {
+	        public void actionPerformed(ActionEvent e) {
+	            List<Oferta> ofertasOptimas = controlador.obtenerCaminoMaximoEnGrafo();
+	            if (!ofertasOptimas.isEmpty()) {
+	                StringBuilder mensaje = new StringBuilder();
+	                mensaje.append("Ofertas óptimas encontradas usando DAG:\n\n");
+	                double gananciaTotal = 0;
+	                
+	                for (Oferta oferta : ofertasOptimas) {
+	                    mensaje.append(oferta.toString()).append("\n");
+	                    gananciaTotal += oferta.getMonto();
+	                }
+	                
+	                mensaje.append("\nGanancia total: $").append(gananciaTotal);
+	                JOptionPane.showMessageDialog(frameInicio, mensaje.toString(), 
+	                    "Ofertas Óptimas (DAG)", JOptionPane.INFORMATION_MESSAGE);
+	            } else {
+	                JOptionPane.showMessageDialog(frameInicio, 
+	                    "No se encontraron ofertas óptimas.", 
+	                    "Ofertas Óptimas (DAG)", 
+	                    JOptionPane.INFORMATION_MESSAGE);
+	            }
+	        }
+	    });
+	}
 }

@@ -1,11 +1,7 @@
 package dao;
 
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
+import java.io.*;
+import java.util.ArrayList;
 import java.util.List;
 
 import logica.Oferta;
@@ -13,12 +9,10 @@ import logica.Oferta;
 public class OfertaDAO {
     private String archivoOfertas;
 
-    // Constructor por defecto que usa "ofertas.txt"
     public OfertaDAO() {
         this.archivoOfertas = "ofertas.txt";
     }
 
-    // Constructor que permite especificar un archivo diferente
     public OfertaDAO(String archivoOfertas) {
         this.archivoOfertas = archivoOfertas;
     }
@@ -27,20 +21,23 @@ public class OfertaDAO {
         try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(archivoOfertas))) {
             oos.writeObject(ofertas);
         } catch (IOException e) {
-            e.printStackTrace();
+            throw new RuntimeException("Error al guardar las ofertas", e);
         }
     }
 
     @SuppressWarnings("unchecked")
     public List<Oferta> cargarOfertas() {
+        File archivo = new File(archivoOfertas);
+        if (!archivo.exists() || archivo.length() == 0) {
+            return new ArrayList<>();
+        }
+
         try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(archivoOfertas))) {
             return (List<Oferta>) ois.readObject();
-        } catch (FileNotFoundException e) {
-            System.out.println("Archivo de ofertas no encontrado, iniciando con lista vacía.");
-            return null;
+        } catch (EOFException e) {
+            return new ArrayList<>();
         } catch (IOException | ClassNotFoundException e) {
-            e.printStackTrace();
-            return null;
+            throw new RuntimeException("Error al cargar las ofertas", e);
         }
     }
 }
