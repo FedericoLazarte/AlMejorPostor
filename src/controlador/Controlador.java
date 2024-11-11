@@ -3,6 +3,9 @@ package controlador;
 import java.util.Date;
 import java.util.List;
 
+import javax.swing.JOptionPane;
+
+import dao.OfertaDAO;
 import logica.Oferta;
 import logica.SalaDeEnsayo;
 
@@ -28,7 +31,11 @@ public class Controlador {
 		this.sala.registrarOferta(oferta);
 	}
 
-	public String obtenerAdjudicadasComoTexto(Date fechaActual) {
+	public void cargarOfertasSerializadas() {
+		this.sala.cargarOfertasSerializadas(new OfertaDAO());
+	}
+	
+	public void obtenerAdjudicadasComoTexto(Date fechaActual) {
 		List<Oferta> ofertasOptimas = sala.encontrarOfertasOptimas(fechaActual);
 		if (!ofertasOptimas.isEmpty()) {
 			double gananciaTotal = sala.calcularGananciaTotal(ofertasOptimas);
@@ -37,14 +44,14 @@ public class Controlador {
 				sb.append(oferta).append("\n");
 			}
 			sb.append("Ganancia total: $").append(gananciaTotal);
-			return sb.toString();
+			JOptionPane.showMessageDialog(null, sb.toString());
 		} else {
-			return "No se encontraron ofertas para la sala por el momento";
+			JOptionPane.showMessageDialog(null, "No se encontraron ofertas para la fecha seleccionada.", "Error", JOptionPane.ERROR_MESSAGE);
 		}
 	}
 
-	public String obtenerRegistradasComoTexto(Date fechaActual) {
-		List<String> ofertasRegistradas = sala.obtenerOfertasRegistradasComoTexto(fechaActual);
+	public String obtenerOfertasDeFecha(Date fechaActual) {
+		List<String> ofertasRegistradas = sala.obtenerOfertasDeFechaComoTexto(fechaActual);
 		StringBuilder sb = new StringBuilder();
 		for (String oferta : ofertasRegistradas) {
 			sb.append(oferta).append("\n");
@@ -52,7 +59,12 @@ public class Controlador {
 		return sb.toString();
 	}
 	
-	public void imprimirOfertas() { //¡¡ES DE PRUEBA!!
-		sala.imprimirOfertas();
+	public String obtenerOfertasRegistradas() {
+		List<String> ofertasRegistradas = sala.obtenerOfertasRegistradasComoTexto();
+		StringBuilder sb = new StringBuilder();
+		for (String oferta : ofertasRegistradas) {
+			sb.append(oferta).append("\n");
+		}
+		return sb.toString();
 	}
 }

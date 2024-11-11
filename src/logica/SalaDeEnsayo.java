@@ -11,21 +11,19 @@ public class SalaDeEnsayo {
 	private List<Oferta> ofertas;
     private OfertaDAO ofertaDAO;
 
-    public SalaDeEnsayo() {
-        this(new OfertaDAO());  // Llama al constructor que recibe un OfertaDAO
+    public SalaDeEnsayo() { //La sala empieza vacía
+    	this.ofertas = new ArrayList<>();
     }
 
-    // Constructor para pruebas que acepta un OfertaDAO personalizado
-    public SalaDeEnsayo(OfertaDAO ofertaDAO) {
-        this.ofertaDAO = ofertaDAO;
+    public void cargarOfertasSerializadas(OfertaDAO ofertaDAO) {
+    	this.ofertaDAO = ofertaDAO;
         this.ofertas = ofertaDAO.cargarOfertas();
-        if (ofertas == null)
-            this.ofertas = new ArrayList<>();
     }
-
+    
     public void registrarOferta(Oferta oferta) {
         this.ofertas.add(oferta);
-        ofertaDAO.guardarOfertas(ofertas);
+        if (ofertaDAO != null)
+        	ofertaDAO.guardarOfertas(ofertas);
     }
 
     public double calcularGananciaTotal(List<Oferta> ofertasOptimas) {
@@ -35,7 +33,7 @@ public class SalaDeEnsayo {
         return gananciaTotal;
     }
 
-    public List<String> obtenerOfertasRegistradasComoTexto(Date fechaActual) {
+    public List<String> obtenerOfertasDeFechaComoTexto(Date fechaActual) {
         List<String> ofertasTexto = new ArrayList<>();
         for (Oferta oferta : ofertas) {
         	if (oferta.getFecha().equals(fechaActual)) { //Solo las ofertas de la fecha indicada
@@ -47,6 +45,16 @@ public class SalaDeEnsayo {
         return ofertasTexto;
     }
 
+    public List<String> obtenerOfertasRegistradasComoTexto() {
+    	List<String> ofertasTexto = new ArrayList<>();
+    	for (Oferta oferta : ofertas) {
+        		String ofertaTexto = "Oferta: " + oferta.getNombreOferente() + " - " + oferta.getInicio() + " - "
+                        + oferta.getFin() + " - " + oferta.getEquipamiento() + " - " + ", Monto: $" + oferta.getMonto() + "\nFecha:" + oferta.getFechaTexto();
+                ofertasTexto.add(ofertaTexto);  
+        }
+    	return ofertasTexto;
+    }
+    
     public List<Oferta> encontrarOfertasOptimas(Date fechaActual) {
         ordenarOfertasPorMontoYHoraFin();  // Ordenar ofertas de forma óptima
 
@@ -75,11 +83,5 @@ public class SalaDeEnsayo {
                 }
             }
         });
-    }
-    
-    public void imprimirOfertas() { //¡¡ES DE PRUEBA!!
-    	for (Oferta oferta : this.ofertas)
-    		System.out.println("Oferta: " + oferta.getNombreOferente() + " - " + oferta.getInicio() + " - "
-                    + oferta.getFin() + " - " + oferta.getEquipamiento() + " - " + ", Monto: $" + oferta.getMonto() + oferta.getFecha());
     }
 }
